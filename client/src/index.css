@@ -1,0 +1,183 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── CAMPAIGN DASHBOARD — Dark-first, data-dense ─────────────────────────
+   Art direction: digital marketing command center
+   Palette: deep navy/slate surfaces, electric teal accent, vivid channel colors
+   Inspiration: Bloomberg Terminal meets modern SaaS dark-mode dashboard
+─────────────────────────────────────────────────────────────────────────── */
+
+@layer base {
+  :root {
+    /* Light mode — slate-white, teal accent */
+    --background: 220 16% 97%;
+    --foreground: 222 25% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 25% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 25% 12%;
+    --primary: 187 98% 28%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 94%;
+    --secondary-foreground: 222 25% 25%;
+    --muted: 220 14% 94%;
+    --muted-foreground: 220 8% 50%;
+    --accent: 187 98% 28%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 10% 88%;
+    --input: 220 10% 88%;
+    --ring: 187 98% 28%;
+    --radius: 0.5rem;
+    --chart-1: 231 91% 64%;
+    --chart-2: 187 98% 28%;
+    --chart-3: 142 71% 45%;
+    --chart-4: 45 93% 58%;
+    --chart-5: 4 86% 58%;
+  }
+
+  .dark {
+    /* Dark mode — deep navy surfaces, teal accent */
+    --background: 222 28% 9%;
+    --foreground: 213 18% 88%;
+    --card: 222 25% 12%;
+    --card-foreground: 213 18% 88%;
+    --popover: 222 22% 14%;
+    --popover-foreground: 213 18% 88%;
+    --primary: 187 75% 48%;
+    --primary-foreground: 222 28% 9%;
+    --secondary: 222 20% 18%;
+    --secondary-foreground: 213 18% 75%;
+    --muted: 222 20% 16%;
+    --muted-foreground: 220 8% 52%;
+    --accent: 187 75% 48%;
+    --accent-foreground: 222 28% 9%;
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 222 15% 22%;
+    --input: 222 15% 22%;
+    --ring: 187 75% 48%;
+    --chart-1: 231 75% 65%;
+    --chart-2: 187 75% 48%;
+    --chart-3: 142 60% 50%;
+    --chart-4: 45 85% 60%;
+    --chart-5: 4 80% 62%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', 'DM Sans', system-ui, sans-serif;
+    line-height: 1.5;
+    min-height: 100dvh;
+  }
+
+  /* Tabular numbers everywhere for data */
+  .tabular {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+}
+
+/* Channel brand colors as CSS vars */
+:root {
+  --ig-color: #E1306C;
+  --fb-color: #1877F2;
+  --gs-color: #34A853;
+  --gd-color: #FBBC05;
+  --ig-bg: rgba(225, 48, 108, 0.12);
+  --fb-bg: rgba(24, 119, 242, 0.12);
+  --gs-bg: rgba(52, 168, 83, 0.12);
+  --gd-bg: rgba(251, 188, 5, 0.12);
+}
+
+/* Traffic light status dots */
+.status-green  { background: #22c55e; box-shadow: 0 0 6px rgba(34,197,94,0.5); }
+.status-yellow { background: #eab308; box-shadow: 0 0 6px rgba(234,179,8,0.5); }
+.status-red    { background: #ef4444; box-shadow: 0 0 6px rgba(239,68,68,0.5); }
+
+/* Chart tooltip override */
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  background: hsl(var(--card)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  border-radius: 8px !important;
+}
+
+/* Scrollable main */
+html, body, #root {
+  height: 100%;
+}
+
+.dashboard-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  grid-template-rows: auto 1fr;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.dashboard-sidebar {
+  grid-row: 1 / -1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.dashboard-header {
+  grid-column: 2;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.dashboard-main {
+  grid-column: 2;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+@media (max-width: 768px) {
+  .dashboard-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr;
+  }
+  .dashboard-sidebar {
+    grid-row: 2;
+    grid-column: 1;
+    overflow-y: visible;
+  }
+  .dashboard-header {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .dashboard-main {
+    grid-column: 1;
+    grid-row: 3;
+  }
+}
+
+/* Pulse animation for live badge */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
+
+/* Number count-up animation */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.4s ease-out both; }

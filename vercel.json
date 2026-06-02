@@ -1,0 +1,14 @@
+{
+  "buildCommand": "npm run build:vercel",
+  "outputDirectory": "dist/public",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" }
+  ],
+  "functions": {
+    "api/campaigns/index.ts": { "runtime": "@vercel/node@5.8.9" },
+    "api/campaigns/[id].ts": { "runtime": "@vercel/node@5.8.9" },
+    "api/campaigns/[id]/actuals/index.ts": { "runtime": "@vercel/node@5.8.9" },
+    "api/campaigns/[id]/actuals/bulk.ts": { "runtime": "@vercel/node@5.8.9" },
+    "api/campaigns/[id]/actuals/[day].ts": { "runtime": "@vercel/node@5.8.9" }
+  }
+}
