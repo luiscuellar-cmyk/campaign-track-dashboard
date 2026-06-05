@@ -1,7 +1,7 @@
 import { VercelRequest, VercelResponse } from "@vercel/node";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || "campaign-dashboard-secret-2026";
+const JWT_SECRET = process.env.JWT_SECRET || "";
 
 export function verifyAuth(req: VercelRequest, res: VercelResponse) {
   const token = req.cookies.token;

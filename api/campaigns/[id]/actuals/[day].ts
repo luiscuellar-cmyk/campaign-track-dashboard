@@ -1,20 +1,20 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { createClient } from "@supabase/supabase-js";
 import WebSocket from "ws";
+import { verifyAuth } from "../../../auth/auth-helper";
 
 function getDB() {
-  return createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_ANON_KEY!, {
+  return createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
     global: { fetch },
     realtime: { transport: WebSocket as any },
   });
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "DELETE,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "DELETE") return res.status(405).json({ error: "Method not allowed" });
+
+  if (!verifyAuth(req, res)) return;
 
   const campaignId = Number(req.query.id);
   const day = Number(req.query.day);
@@ -26,6 +26,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (error) return res.status(500).json({ error: error.message });
     return res.status(204).end();
   } catch (err: any) {
-    return res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 }

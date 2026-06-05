@@ -14,6 +14,9 @@
     "api/auth/me.ts": {
       "runtime": "@vercel/node@5.8.9"
     },
+    "api/auth/logout.ts": {
+      "runtime": "@vercel/node@5.8.9"
+    },
     "api/campaigns/index.ts": {
       "runtime": "@vercel/node@5.8.9"
     },

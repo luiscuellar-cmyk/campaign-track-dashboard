@@ -1,6 +1,6 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
 
-const API_BASE = import.meta.env.MODE === 'production' ? "" : "http://127.0.0.1:5000";
+const API_BASE = "";
 
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {

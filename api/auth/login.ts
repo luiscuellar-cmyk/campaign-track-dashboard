@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { serialize } from "cookie";
 
-const JWT_SECRET = process.env.JWT_SECRET || "campaign-dashboard-secret-2026";
+const JWT_SECRET = process.env.JWT_SECRET || "";
 
 function getDB() {
     return createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
@@ -48,7 +48,6 @@ export default async function handler(req: any, res: any) {
             maxAge: 60 * 60 * 8,
             path: "/"
         });
-        console.log("[Login] Sending cookie:", cookie);
         res.setHeader("Set-Cookie", cookie);
 
         return res.json({ user: { id: user.id, username: user.username, role: user.role } });
