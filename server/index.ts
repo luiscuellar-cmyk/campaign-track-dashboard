@@ -28,6 +28,12 @@ app.use("/api/", limiter);
 
 app.use(cookieParser());
 
+// Debugging middleware
+app.use((req, res, next) => {
+    console.log("[Request] Path:", req.originalUrl, "Cookies:", JSON.stringify(req.cookies));
+    next();
+});
+
 declare module "http" {
   interface IncomingMessage {
     rawBody: unknown;

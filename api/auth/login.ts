@@ -41,16 +41,18 @@ export default async function handler(req: any, res: any) {
             { expiresIn: "8h" }
         );
 
-        res.setHeader("Set-Cookie", serialize("token", token, {
+        const cookie = serialize("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
-            maxAge: 60 * 60 * 8, // 8 hours
+            sameSite: "lax",
+            maxAge: 60 * 60 * 8,
             path: "/"
-        }));
+        });
+        console.log("[Login] Sending cookie:", cookie);
+        res.setHeader("Set-Cookie", cookie);
 
         return res.json({ user: { id: user.id, username: user.username, role: user.role } });
-    } catch (err: any) {
+        } catch (err: any) {
         return res.status(500).json({ error: "Internal Server Error" });
     }
 }

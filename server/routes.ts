@@ -24,11 +24,12 @@ export function registerRoutes(httpServer: Server, app: Express) {
 
     if (token) {
       try {
-        const decoded = jwt.verify(token, JWT_SECRET);
-        (req as any).user = decoded;
-        return next();
+      const decoded = jwt.verify(token, JWT_SECRET);
+      (req as any).user = decoded;
+      return next();
       } catch (err) {
-        return res.status(401).json({ error: "Unauthorized" });
+      console.error("[Auth] JWT verification failed:", err);
+      return res.status(401).json({ error: "Unauthorized" });
       }
     }
     
@@ -46,16 +47,16 @@ export function registerRoutes(httpServer: Server, app: Express) {
   app.post("/api/auth/login", (req, res) => loginHandler(req as any, res as any));
   
   app.get("/api/auth/me", (req, res) => {
-    if (req.isAuthenticated()) {
-      return res.json({ user: req.user });
+    const user = (req as any).user;
+    if (user) {
+      return res.json({ user });
     }
     return res.status(401).json({ error: "Unauthorized" });
   });
 
   app.post("/api/auth/logout", (req, res) => {
-    req.logout(() => {
-      res.sendStatus(200);
-    });
+    res.clearCookie("token");
+    res.sendStatus(200);
   });
 
   // ─── CAMPAIGNS ──────────────────────────────────────────────────
