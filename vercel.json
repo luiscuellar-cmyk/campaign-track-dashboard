@@ -8,29 +8,9 @@
     }
   ],
   "functions": {
-    "api/auth/login.ts": {
-      "runtime": "@vercel/node@5.8.9"
-    },
-    "api/auth/me.ts": {
-      "runtime": "@vercel/node@5.8.9"
-    },
-    "api/auth/logout.ts": {
-      "runtime": "@vercel/node@5.8.9"
-    },
-    "api/campaigns/index.ts": {
-      "runtime": "@vercel/node@5.8.9"
-    },
-    "api/campaigns/[id].ts": {
-      "runtime": "@vercel/node@5.8.9"
-    },
-    "api/campaigns/[id]/actuals/index.ts": {
-      "runtime": "@vercel/node@5.8.9"
-    },
-    "api/campaigns/[id]/actuals/bulk.ts": {
-      "runtime": "@vercel/node@5.8.9"
-    },
-    "api/campaigns/[id]/actuals/[day].ts": {
-      "runtime": "@vercel/node@5.8.9"
+    "api/**/*.ts": {
+      "runtime": "@vercel/node@5.8.9",
+      "includeFiles": "shared/**"
     }
   }
 }
