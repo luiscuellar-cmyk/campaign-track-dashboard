@@ -1,13 +1,14 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { createClient } from "@supabase/supabase-js";
 import bcrypt from "bcryptjs";
-import WebSocket from "ws";
-import passport from "passport";
+import jwt from "jsonwebtoken";
+import { serialize } from "cookie";
+
+const JWT_SECRET = process.env.JWT_SECRET || "campaign-dashboard-secret-2026";
 
 function getDB() {
     return createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
         global: { fetch },
-        realtime: { transport: WebSocket as any },
     });
 }
 
@@ -20,45 +21,36 @@ export default async function handler(req: any, res: any) {
 
     try {
         const db = getDB();
-        
-        // Log the table structure or query to debug
-        console.log("[Login] Querying public.users table...");
         const { data: users, error } = await db
             .from("users")
-            .select("username, password_hash, id, role");
-            
-        console.log("[Login] Database query error:", error);
-        console.log("[Login] Users found:", JSON.stringify(users));
-        
-        const user = users?.find(u => u.username === username) || null;
+            .select("id, username, password_hash, role")
+            .eq("username", username);
 
-        if (error) {
-            console.error("[Login] Supabase error:", error);
-            return res.status(401).json({ error: "Error interno al consultar usuario" });
-        }
-        
-        if (!user) {
-            console.log("[Login] User not found:", username);
+        const user = users && users.length > 0 ? users[0] : null;
+
+        if (error || !user)
             return res.status(401).json({ error: "Usuario o contraseña incorrectos" });
-        }
 
         const valid = await bcrypt.compare(password, user.password_hash);
-        if (!valid) {
-            console.log("[Login] Invalid password for user:", username);
+        if (!valid)
             return res.status(401).json({ error: "Usuario o contraseña incorrectos" });
-        }
 
-        // Establish session
-        const userInfo = { id: user.id, username: user.username, role: user.role };
-        req.login(userInfo, (err: any) => {
-            if (err) {
-              console.error("[Login] Passport login error:", err);
-              return res.status(500).json({ error: "Error al iniciar sesión" });
-            }
-            console.log("[Login] Session established for user:", userInfo.username);
-            return res.json({ user: userInfo });
-        });
+        const token = jwt.sign(
+            { id: user.id, username: user.username, role: user.role },
+            JWT_SECRET,
+            { expiresIn: "8h" }
+        );
+
+        res.setHeader("Set-Cookie", serialize("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            maxAge: 60 * 60 * 8, // 8 hours
+            path: "/"
+        }));
+
+        return res.json({ user: { id: user.id, username: user.username, role: user.role } });
     } catch (err: any) {
-        return res.status(500).json({ error: err.message });
+        return res.status(500).json({ error: "Internal Server Error" });
     }
 }

@@ -9,15 +9,34 @@ import campaignIdHandler from "../api/campaigns/[id]";
 import actualsHandler from "../api/campaigns/[id]/actuals/index";
 import bulkActualsHandler from "../api/campaigns/[id]/actuals/bulk";
 
+import jwt from "jsonwebtoken";
+import { Request, Response, NextFunction } from "express";
+
+const JWT_SECRET = process.env.JWT_SECRET || "campaign-dashboard-secret-2026";
+
 export function registerRoutes(httpServer: Server, app: Express) {
-  // Auth Middleware
+  // JWT Auth Middleware
   const checkAuth = (req: Request, res: Response, next: NextFunction) => {
-    // Check if session is authenticated or if it's a login request
-    console.log(`[Auth] Path: ${req.originalUrl}, Auth: ${req.isAuthenticated()}, Cookies: ${JSON.stringify(req.cookies)}, SessionID: ${req.sessionID}`);
-    if (req.isAuthenticated() || req.originalUrl === "/api/auth/login") {
+    const token = req.cookies.token;
+    if (!token && req.originalUrl !== "/api/auth/login") {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    if (token) {
+      try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        (req as any).user = decoded;
+        return next();
+      } catch (err) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+    }
+    
+    // Allow login route
+    if (req.originalUrl === "/api/auth/login") {
       return next();
     }
-    console.log(`[Auth] Denied access to ${req.originalUrl}`);
+    
     return res.status(401).json({ error: "Unauthorized" });
   };
   

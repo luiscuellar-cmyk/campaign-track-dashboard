@@ -26,25 +26,7 @@ const limiter = rateLimit({
 });
 app.use("/api/", limiter);
 
-app.use(cookieParser()); // Add cookie-parser here
-
-// Session & Passport
-app.use(session({
-  secret: process.env.SESSION_SECRET || "super-secret-key",
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: process.env.NODE_ENV === "production" }
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-
-passport.serializeUser((user: any, done) => {
-  done(null, user);
-});
-
-passport.deserializeUser((user: any, done) => {
-  done(null, user);
-});
+app.use(cookieParser());
 
 declare module "http" {
   interface IncomingMessage {
