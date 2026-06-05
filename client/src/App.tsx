@@ -23,7 +23,9 @@ function Protected({ path, component: Component }: { path: string; component: Re
 }
 
 function AppRoutes() {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
+  
+  if (isLoading) return <div className="flex items-center justify-center min-h-screen">Cargando...</div>;
   if (!user) return <LoginPage />;
 
   return (
@@ -31,9 +33,9 @@ function AppRoutes() {
       <DashboardLayout>
         <Switch>
           <Route path="/" component={OverviewPage} />
-          <Route path="/datos">        <Protected path="/datos" component={DataEntryPage} /> </Route>
+          <Route path="/datos"><Protected path="/datos" component={DataEntryPage} /></Route>
           <Route path="/graficas" component={ChartsPage} />
-          <Route path="/configuracion"><Protected path="/configuracion" component={SettingsPage} />  </Route>
+          <Route path="/configuracion"><Protected path="/configuracion" component={SettingsPage} /></Route>
           <Route component={NotFound} />
         </Switch>
       </DashboardLayout>

@@ -25,6 +25,19 @@ export function registerRoutes(httpServer: Server, app: Express) {
 
   // ─── AUTH ──────────────────────────────────────────────────────
   app.post("/api/auth/login", (req, res) => loginHandler(req as any, res as any));
+  
+  app.get("/api/auth/me", (req, res) => {
+    if (req.isAuthenticated()) {
+      return res.json({ user: req.user });
+    }
+    return res.status(401).json({ error: "Unauthorized" });
+  });
+
+  app.post("/api/auth/logout", (req, res) => {
+    req.logout(() => {
+      res.sendStatus(200);
+    });
+  });
 
   // ─── CAMPAIGNS ──────────────────────────────────────────────────
   app.all("/api/campaigns", (req, res) => campaignsHandler(req as any, res as any));
