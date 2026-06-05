@@ -51,7 +51,7 @@ function toSnake(b: any, campaignId: number) {
   };
 }
 
-import { insertDailyActualSchema } from "@shared/schema";
+import { insertDailyActualSchema } from "../../../../shared/schema";
 import { verifyAuth } from "../../../auth/auth-helper";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

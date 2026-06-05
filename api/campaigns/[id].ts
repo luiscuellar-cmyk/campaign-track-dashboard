@@ -45,7 +45,7 @@ function toSnake(b: any) {
   };
 }
 
-import { insertCampaignSchema } from "@shared/schema";
+import { insertCampaignSchema } from "../../shared/schema";
 import { verifyAuth } from "../auth/auth-helper";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
