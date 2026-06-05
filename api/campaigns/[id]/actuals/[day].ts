@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { createClient } from "@supabase/supabase-js";
 import WebSocket from "ws";
-import { verifyAuth } from "../../../auth/auth-helper";
+import { verifyAuth } from "../../../auth/auth-helper.js";
 
 function getDB() {
   return createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {

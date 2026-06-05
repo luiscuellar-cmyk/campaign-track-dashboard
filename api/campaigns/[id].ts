@@ -45,8 +45,8 @@ function toSnake(b: any) {
   };
 }
 
-import { insertCampaignSchema } from "../../shared/validators";
-import { verifyAuth } from "../auth/auth-helper";
+import { insertCampaignSchema } from "../../shared/validators.js";
+import { verifyAuth } from "../auth/auth-helper.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const id = Number(req.query.id);

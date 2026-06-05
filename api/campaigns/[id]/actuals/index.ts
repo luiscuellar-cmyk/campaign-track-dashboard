@@ -51,8 +51,8 @@ function toSnake(b: any, campaignId: number) {
   };
 }
 
-import { insertDailyActualSchema } from "../../../../shared/validators";
-import { verifyAuth } from "../../../auth/auth-helper";
+import { insertDailyActualSchema } from "../../../../shared/validators.js";
+import { verifyAuth } from "../../../auth/auth-helper.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const campaignId = Number(req.query.id);

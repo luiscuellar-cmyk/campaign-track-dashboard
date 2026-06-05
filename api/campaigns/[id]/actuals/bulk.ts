@@ -51,9 +51,9 @@ function toSnake(b: any, campaignId: number) {
   };
 }
 
-import { insertDailyActualSchema } from "../../../../shared/validators";
+import { insertDailyActualSchema } from "../../../../shared/validators.js";
 import { z } from "zod";
-import { verifyAuth } from "../../../auth/auth-helper";
+import { verifyAuth } from "../../../auth/auth-helper.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
