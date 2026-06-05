@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import WebSocket from "ws";
 
 function getDB() {
-  return createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_ANON_KEY!, {
+  return createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
     global: { fetch },
     realtime: { transport: WebSocket as any },
   });
@@ -45,12 +45,10 @@ function toSnake(b: any) {
   };
 }
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET,PATCH,DELETE,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  if (req.method === "OPTIONS") return res.status(200).end();
+import { insertCampaignSchema } from "@shared/schema";
+// ... [rest of functions] ...
 
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   const id = Number(req.query.id);
   if (isNaN(id)) return res.status(400).json({ error: "Invalid id" });
 
@@ -64,25 +62,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     if (req.method === "PATCH") {
-      console.log("PATCH request body:", req.body);
-      const snakeData = toSnake(req.body);
-      console.log("Mapped snakeData:", snakeData);
-      const { data, error } = await db.from("campaigns").update(snakeData).eq("id", id).select().single();
-      if (error) {
-        console.error("Supabase update error:", error);
-        return res.status(500).json({ error: error.message });
-      }
+      const parsed = insertCampaignSchema.partial().safeParse(req.body);
+      if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
+      
+      const { data, error } = await db.from("campaigns").update(toSnake(parsed.data)).eq("id", id).select().single();
+      if (error) return res.status(500).json({ error: "Failed to update campaign" });
       return res.json(toCamel(data));
     }
 
     if (req.method === "DELETE") {
       const { error } = await db.from("campaigns").delete().eq("id", id);
-      if (error) return res.status(500).json({ error: error.message });
+      if (error) return res.status(500).json({ error: "Failed to delete campaign" });
       return res.status(204).end();
     }
 
     return res.status(405).json({ error: "Method not allowed" });
   } catch (err: any) {
-    return res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 }

@@ -10,6 +10,19 @@ import actualsHandler from "../api/campaigns/[id]/actuals/index";
 import bulkActualsHandler from "../api/campaigns/[id]/actuals/bulk";
 
 export function registerRoutes(httpServer: Server, app: Express) {
+  // Auth Middleware
+  const checkAuth = (req: Request, res: Response, next: NextFunction) => {
+    // Check if session is authenticated or if it's a login request
+    console.log(`[Auth] Path: ${req.originalUrl}, Auth: ${req.isAuthenticated()}, Cookies: ${JSON.stringify(req.cookies)}, SessionID: ${req.sessionID}`);
+    if (req.isAuthenticated() || req.originalUrl === "/api/auth/login") {
+      return next();
+    }
+    console.log(`[Auth] Denied access to ${req.originalUrl}`);
+    return res.status(401).json({ error: "Unauthorized" });
+  };
+  
+  app.use("/api/", checkAuth);
+
   // ─── AUTH ──────────────────────────────────────────────────────
   app.post("/api/auth/login", (req, res) => loginHandler(req as any, res as any));
 

@@ -1,23 +1,17 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { createClient } from "@supabase/supabase-js";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import WebSocket from "ws";
-
-const JWT_SECRET = process.env.JWT_SECRET || "campaign-dashboard-secret-2026";
+import passport from "passport";
 
 function getDB() {
-    return createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_ANON_KEY!, {
+    return createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
         global: { fetch },
         realtime: { transport: WebSocket as any },
     });
 }
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-    if (req.method === "OPTIONS") return res.status(200).end();
+export default async function handler(req: any, res: any) {
     if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
     const { username, password } = req.body || {};
@@ -26,26 +20,44 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     try {
         const db = getDB();
-        const { data: user, error } = await db
+        
+        // Log the table structure or query to debug
+        console.log("[Login] Querying public.users table...");
+        const { data: users, error } = await db
             .from("users")
-            .select("*")
-            .eq("username", username)
-            .single();
+            .select("username, password_hash, id, role");
+            
+        console.log("[Login] Database query error:", error);
+        console.log("[Login] Users found:", JSON.stringify(users));
+        
+        const user = users?.find(u => u.username === username) || null;
 
-        if (error || !user)
+        if (error) {
+            console.error("[Login] Supabase error:", error);
+            return res.status(401).json({ error: "Error interno al consultar usuario" });
+        }
+        
+        if (!user) {
+            console.log("[Login] User not found:", username);
             return res.status(401).json({ error: "Usuario o contraseña incorrectos" });
+        }
 
         const valid = await bcrypt.compare(password, user.password_hash);
-        if (!valid)
+        if (!valid) {
+            console.log("[Login] Invalid password for user:", username);
             return res.status(401).json({ error: "Usuario o contraseña incorrectos" });
+        }
 
-        const token = jwt.sign(
-            { id: user.id, username: user.username, role: user.role },
-            JWT_SECRET,
-            { expiresIn: "8h" }
-        );
-
-        return res.json({ token, user: { id: user.id, username: user.username, role: user.role } });
+        // Establish session
+        const userInfo = { id: user.id, username: user.username, role: user.role };
+        req.login(userInfo, (err: any) => {
+            if (err) {
+              console.error("[Login] Passport login error:", err);
+              return res.status(500).json({ error: "Error al iniciar sesión" });
+            }
+            console.log("[Login] Session established for user:", userInfo.username);
+            return res.json({ user: userInfo });
+        });
     } catch (err: any) {
         return res.status(500).json({ error: err.message });
     }

@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import WebSocket from "ws";
 
 function getDB() {
-  return createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_ANON_KEY!, {
+  return createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
     global: { fetch },
     realtime: { transport: WebSocket as any },
   });
@@ -45,29 +45,31 @@ function toSnake(b: any) {
   };
 }
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  if (req.method === "OPTIONS") return res.status(200).end();
+import { insertCampaignSchema } from "@shared/schema";
 
+// ... [rest of functions] ...
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const db = getDB();
 
     if (req.method === "GET") {
       const { data, error } = await db.from("campaigns").select("*").order("id");
-      if (error) return res.status(500).json({ error: error.message });
+      if (error) return res.status(500).json({ error: "Failed to fetch campaigns" });
       return res.json((data || []).map(toCamel));
     }
 
     if (req.method === "POST") {
-      const { data, error } = await db.from("campaigns").insert([toSnake(req.body)]).select().single();
-      if (error) return res.status(500).json({ error: error.message });
+      const parsed = insertCampaignSchema.safeParse(req.body);
+      if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
+
+      const { data, error } = await db.from("campaigns").insert([toSnake(parsed.data)]).select().single();
+      if (error) return res.status(500).json({ error: "Failed to create campaign" });
       return res.status(201).json(toCamel(data));
     }
 
     return res.status(405).json({ error: "Method not allowed" });
   } catch (err: any) {
-    return res.status(500).json({ error: err.message, stack: err.stack });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 }

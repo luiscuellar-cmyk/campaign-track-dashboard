@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import WebSocket from "ws";
 
 function getDB() {
-  return createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_ANON_KEY!, {
+  return createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
     global: { fetch },
     realtime: { transport: WebSocket as any },
   });
@@ -51,11 +51,11 @@ function toSnake(b: any, campaignId: number) {
   };
 }
 
+import { insertDailyActualSchema } from "@shared/schema";
+import { z } from "zod";
+// ... [rest of functions] ...
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
   const campaignId = Number(req.query.id);
@@ -63,14 +63,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const db = getDB();
-    const rows = (req.body as any[]).map((r) => toSnake(r, campaignId));
+    
+    // Validate request body as an array and add limit
+    const schema = z.array(insertDailyActualSchema.omit({ campaignId: true })).max(100);
+    const parsed = schema.safeParse(req.body);
+    if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
+
+    const rows = parsed.data.map((r) => toSnake(r, campaignId));
+    
     const { data, error } = await db
       .from("daily_actuals")
       .upsert(rows, { onConflict: "campaign_id,day" })
       .select();
-    if (error) return res.status(500).json({ error: error.message });
+    if (error) return res.status(500).json({ error: "Failed to bulk upsert actuals" });
     return res.status(201).json((data || []).map(toCamel));
   } catch (err: any) {
-    return res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 }

@@ -4,9 +4,47 @@ import type { Request } from 'express';
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "node:http";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
+import session from "express-session";
+import passport from "passport";
+import cookieParser from "cookie-parser";
+import { Strategy as LocalStrategy } from "passport-local";
 
 const app = express();
 const httpServer = createServer(app);
+
+// Security Headers
+app.use(helmet({
+  contentSecurityPolicy: false,
+}));
+
+// Rate Limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100
+});
+app.use("/api/", limiter);
+
+app.use(cookieParser()); // Add cookie-parser here
+
+// Session & Passport
+app.use(session({
+  secret: process.env.SESSION_SECRET || "super-secret-key",
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: process.env.NODE_ENV === "production" }
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser((user: any, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((user: any, done) => {
+  done(null, user);
+});
 
 declare module "http" {
   interface IncomingMessage {
@@ -95,7 +133,7 @@ app.use((req, res, next) => {
   httpServer.listen(
     {
       port,
-      host: "0.0.0.0",
+      host: process.env.NODE_ENV === "production" ? "0.0.0.0" : "127.0.0.1",
       reusePort: false,
     },
     () => {

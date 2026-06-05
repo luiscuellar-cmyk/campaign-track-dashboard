@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import WebSocket from "ws";
 
 function getDB() {
-  return createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_ANON_KEY!, {
+  return createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
     global: { fetch },
     realtime: { transport: WebSocket as any },
   });
@@ -51,12 +51,10 @@ function toSnake(b: any, campaignId: number) {
   };
 }
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,DELETE,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  if (req.method === "OPTIONS") return res.status(200).end();
+import { insertDailyActualSchema } from "@shared/schema";
+// ... [rest of functions] ...
 
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   const campaignId = Number(req.query.id);
   if (isNaN(campaignId)) return res.status(400).json({ error: "Invalid campaign id" });
 
@@ -66,27 +64,30 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (req.method === "GET") {
       const { data, error } = await db
         .from("daily_actuals").select("*").eq("campaign_id", campaignId).order("day");
-      if (error) return res.status(500).json({ error: error.message });
+      if (error) return res.status(500).json({ error: "Failed to fetch actuals" });
       return res.json((data || []).map(toCamel));
     }
 
     if (req.method === "POST") {
+      const parsed = insertDailyActualSchema.omit({ campaignId: true }).safeParse(req.body);
+      if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
+
       const { data, error } = await db
         .from("daily_actuals")
-        .upsert([toSnake(req.body, campaignId)], { onConflict: "campaign_id,day" })
+        .upsert([toSnake(parsed.data, campaignId)], { onConflict: "campaign_id,day" })
         .select().single();
-      if (error) return res.status(500).json({ error: error.message });
+      if (error) return res.status(500).json({ error: "Failed to upsert actuals" });
       return res.status(201).json(toCamel(data));
     }
 
     if (req.method === "DELETE") {
       const { error } = await db.from("daily_actuals").delete().eq("campaign_id", campaignId);
-      if (error) return res.status(500).json({ error: error.message });
+      if (error) return res.status(500).json({ error: "Failed to delete actuals" });
       return res.status(204).end();
     }
 
     return res.status(405).json({ error: "Method not allowed" });
   } catch (err: any) {
-    return res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 }
