@@ -4,18 +4,18 @@ export const CHANNELS = ["instagram", "facebook", "googleSearch", "googleDisplay
 export type ChannelKey = typeof CHANNELS[number];
 
 export const CHANNEL_META: Record<ChannelKey, { label: string; color: string; cssVar: string; icon: string }> = {
-  instagram:     { label: "Instagram",      color: "#E1306C", cssVar: "--ig-color", icon: "IG" },
-  facebook:      { label: "Facebook",       color: "#1877F2", cssVar: "--fb-color", icon: "FB" },
-  googleSearch:  { label: "Google Search",  color: "#34A853", cssVar: "--gs-color", icon: "GS" },
+  instagram: { label: "Instagram", color: "#E1306C", cssVar: "--ig-color", icon: "IG" },
+  facebook: { label: "Facebook", color: "#1877F2", cssVar: "--fb-color", icon: "FB" },
+  googleSearch: { label: "Google Search", color: "#34A853", cssVar: "--gs-color", icon: "GS" },
   googleDisplay: { label: "Google Display", color: "#FBBC05", cssVar: "--gd-color", icon: "GD" },
 };
 
 // Budget allocation per channel from campaign config
 export function getChannelBudget(campaign: Campaign, ch: ChannelKey): number {
   const pctMap: Record<ChannelKey, number> = {
-    instagram:     campaign.pctInstagram,
-    facebook:      campaign.pctFacebook,
-    googleSearch:  campaign.pctGoogleSearch,
+    instagram: campaign.pctInstagram,
+    facebook: campaign.pctFacebook,
+    googleSearch: campaign.pctGoogleSearch,
     googleDisplay: campaign.pctGoogleDisplay,
   };
   return campaign.totalBudget * pctMap[ch];
@@ -44,9 +44,9 @@ export function projectedClicks(impressions: number, ctr: number): number {
 // CPM map from campaign
 export function getCPM(campaign: Campaign, ch: ChannelKey): number {
   const map: Record<ChannelKey, number> = {
-    instagram:     campaign.cpmInstagram,
-    facebook:      campaign.cpmFacebook,
-    googleSearch:  campaign.cpmGoogleSearch,
+    instagram: campaign.cpmInstagram,
+    facebook: campaign.cpmFacebook,
+    googleSearch: campaign.cpmGoogleSearch,
     googleDisplay: campaign.cpmGoogleDisplay,
   };
   return map[ch];
@@ -55,9 +55,9 @@ export function getCPM(campaign: Campaign, ch: ChannelKey): number {
 // CTR map from campaign
 export function getCTR(campaign: Campaign, ch: ChannelKey): number {
   const map: Record<ChannelKey, number> = {
-    instagram:     campaign.ctrInstagram,
-    facebook:      campaign.ctrFacebook,
-    googleSearch:  campaign.ctrGoogleSearch,
+    instagram: campaign.ctrInstagram,
+    facebook: campaign.ctrFacebook,
+    googleSearch: campaign.ctrGoogleSearch,
     googleDisplay: campaign.ctrGoogleDisplay,
   };
   return map[ch];
@@ -77,11 +77,11 @@ export interface DayData {
   totalClicksProj: number;
   // Per channel real
   spendIG: number; spendFB: number; spendGS: number; spendGD: number;
-  impIG: number;   impFB: number;   impGS: number;   impGD: number;
+  impIG: number; impFB: number; impGS: number; impGD: number;
   clicksIG: number; clicksFB: number; clicksGS: number; clicksGD: number;
   // Per channel projected
   projSpendIG: number; projSpendFB: number; projSpendGS: number; projSpendGD: number;
-  projImpIG: number;   projImpFB: number;   projImpGS: number;   projImpGD: number;
+  projImpIG: number; projImpFB: number; projImpGS: number; projImpGD: number;
   projClicksIG: number; projClicksFB: number; projClicksGS: number; projClicksGD: number;
   // CTRs
   ctrRealIG: number; ctrRealFB: number; ctrRealGS: number; ctrRealGD: number;
@@ -116,26 +116,26 @@ export function buildDayData(campaign: Campaign, actuals: DailyActual[]): DayDat
     const pClicksGD = projectedClicks(pImpGD, getCTR(campaign, "googleDisplay"));
 
     const totalSpendProj = pSpendIG + pSpendFB + pSpendGS + pSpendGD;
-    const totalImpProj   = pImpIG + pImpFB + pImpGS + pImpGD;
+    const totalImpProj = pImpIG + pImpFB + pImpGS + pImpGD;
     const totalClicksProj = pClicksIG + pClicksFB + pClicksGS + pClicksGD;
 
     // Actual data (0 if not entered)
-    const spendIG    = actual?.spendInstagram    ?? 0;
-    const spendFB    = actual?.spendFacebook     ?? 0;
-    const spendGS    = actual?.spendGoogleSearch ?? 0;
-    const spendGD    = actual?.spendGoogleDisplay ?? 0;
-    const impIG      = actual?.impInstagram      ?? 0;
-    const impFB      = actual?.impFacebook       ?? 0;
-    const impGS      = actual?.impGoogleSearch   ?? 0;
-    const impGD      = actual?.impGoogleDisplay  ?? 0;
-    const clicksIG   = actual?.clicksInstagram   ?? 0;
-    const clicksFB   = actual?.clicksFacebook    ?? 0;
-    const clicksGS   = actual?.clicksGoogleSearch ?? 0;
-    const clicksGD   = actual?.clicksGoogleDisplay ?? 0;
+    const spendIG = actual?.spendInstagram ?? 0;
+    const spendFB = actual?.spendFacebook ?? 0;
+    const spendGS = actual?.spendGoogleSearch ?? 0;
+    const spendGD = actual?.spendGoogleDisplay ?? 0;
+    const impIG = actual?.impInstagram ?? 0;
+    const impFB = actual?.impFacebook ?? 0;
+    const impGS = actual?.impGoogleSearch ?? 0;
+    const impGD = actual?.impGoogleDisplay ?? 0;
+    const clicksIG = actual?.clicksInstagram ?? 0;
+    const clicksFB = actual?.clicksFacebook ?? 0;
+    const clicksGS = actual?.clicksGoogleSearch ?? 0;
+    const clicksGD = actual?.clicksGoogleDisplay ?? 0;
 
-    const totalSpendReal   = spendIG + spendFB + spendGS + spendGD;
-    const totalImpReal     = impIG + impFB + impGS + impGD;
-    const totalClicksReal  = clicksIG + clicksFB + clicksGS + clicksGD;
+    const totalSpendReal = spendIG + spendFB + spendGS + spendGD;
+    const totalImpReal = impIG + impFB + impGS + impGD;
+    const totalClicksReal = clicksIG + clicksFB + clicksGS + clicksGD;
 
     const ctrRealIG = impIG > 0 ? clicksIG / impIG : 0;
     const ctrRealFB = impFB > 0 ? clicksFB / impFB : 0;
@@ -208,18 +208,18 @@ export function getChannelAlerts(campaign: Campaign, actuals: DailyActual[]): Ch
     const projTotalSoFar = projDailySpend * completedDays;
 
     const spendKey = `spend${ch.charAt(0).toUpperCase() + ch.slice(1)}` as keyof DailyActual;
-    const impKey   = `imp${ch.charAt(0).toUpperCase() + ch.slice(1)}` as keyof DailyActual;
-    const clkKey   = `clicks${ch.charAt(0).toUpperCase() + ch.slice(1)}` as keyof DailyActual;
+    const impKey = `imp${ch.charAt(0).toUpperCase() + ch.slice(1)}` as keyof DailyActual;
+    const clkKey = `clicks${ch.charAt(0).toUpperCase() + ch.slice(1)}` as keyof DailyActual;
 
     const realSpendTotal = actuals.reduce((s, a) => s + ((a as any)[`spend${cap(ch)}`] ?? 0), 0);
-    const realImpTotal   = actuals.reduce((s, a) => s + ((a as any)[`imp${cap(ch)}`] ?? 0), 0);
-    const realClkTotal   = actuals.reduce((s, a) => s + ((a as any)[`clicks${cap(ch)}`] ?? 0), 0);
+    const realImpTotal = actuals.reduce((s, a) => s + ((a as any)[`imp${cap(ch)}`] ?? 0), 0);
+    const realClkTotal = actuals.reduce((s, a) => s + ((a as any)[`clicks${cap(ch)}`] ?? 0), 0);
 
     const projCTR = getCTR(campaign, ch);
     const realCTR = realImpTotal > 0 ? realClkTotal / realImpTotal : 0;
 
     const spendPacing = projTotalSoFar > 0 ? realSpendTotal / projTotalSoFar : 0;
-    const ctrRatio    = projCTR > 0 ? realCTR / projCTR : 0;
+    const ctrRatio = projCTR > 0 ? realCTR / projCTR : 0;
 
     let status: TrafficLight;
     let message: string;
@@ -232,21 +232,21 @@ export function getChannelAlerts(campaign: Campaign, actuals: DailyActual[]): Ch
       message = "En objetivo";
     } else if (spendPacing > 1.10 && spendPacing <= 1.30) {
       status = "yellow";
-      message = `Pacing acelerado (${(spendPacing*100).toFixed(0)}%) — revisar ritmo`;
+      message = `Pacing acelerado (${(spendPacing * 100).toFixed(0)}%) — revisar ritmo`;
     } else if (spendPacing > 1.30) {
       status = "red";
-      message = `Sobregasto crítico (${(spendPacing*100).toFixed(0)}%) — pausar`;
+      message = `Sobregasto crítico (${(spendPacing * 100).toFixed(0)}%) — pausar`;
     } else if ((spendPacing < 0.85 && spendPacing >= 0.70) || (ctrRatio < 0.85 && ctrRatio >= 0.65)) {
       status = "yellow";
       const issues = [];
-      if (spendPacing < 0.85) issues.push(`pacing bajo (${(spendPacing*100).toFixed(0)}%)`);
-      if (ctrRatio < 0.85) issues.push(`CTR bajo (${(ctrRatio*100).toFixed(0)}% de meta)`);
+      if (spendPacing < 0.85) issues.push(`pacing bajo (${(spendPacing * 100).toFixed(0)}%)`);
+      if (ctrRatio < 0.85) issues.push(`CTR bajo (${(ctrRatio * 100).toFixed(0)}% de meta)`);
       message = issues.join(" · ");
     } else {
       status = "red";
       const issues = [];
-      if (spendPacing < 0.70) issues.push(`pacing crítico (${(spendPacing*100).toFixed(0)}%)`);
-      if (ctrRatio < 0.65) issues.push(`CTR crítico (${(ctrRatio*100).toFixed(0)}% de meta)`);
+      if (spendPacing < 0.70) issues.push(`pacing crítico (${(spendPacing * 100).toFixed(0)}%)`);
+      if (ctrRatio < 0.65) issues.push(`CTR crítico (${(ctrRatio * 100).toFixed(0)}% de meta)`);
       message = issues.join(" · ") || "Revisar urgente";
     }
 

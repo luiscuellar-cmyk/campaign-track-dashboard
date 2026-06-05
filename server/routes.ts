@@ -3,66 +3,47 @@ import type { Server } from "http";
 import { storage } from "./storage";
 import { insertCampaignSchema, insertDailyActualSchema } from "@shared/schema";
 import { z } from "zod";
+import loginHandler from "../api/auth/login";
+import campaignsHandler from "../api/campaigns/index";
+import campaignIdHandler from "../api/campaigns/[id]";
+import actualsHandler from "../api/campaigns/[id]/actuals/index";
+import bulkActualsHandler from "../api/campaigns/[id]/actuals/bulk";
 
 export function registerRoutes(httpServer: Server, app: Express) {
+  // ─── AUTH ──────────────────────────────────────────────────────
+  app.post("/api/auth/login", (req, res) => loginHandler(req as any, res as any));
+
   // ─── CAMPAIGNS ──────────────────────────────────────────────────
-  app.get("/api/campaigns", (_req, res) => {
-    res.json(storage.getCampaigns());
+  app.all("/api/campaigns", (req, res) => campaignsHandler(req as any, res as any));
+
+  app.all("/api/campaigns/:id", (req, res) => {
+    // Inject the 'id' parameter into req.query for the Vercel handler
+    const patchedReq = { ...req, query: { ...req.query, id: req.params.id } };
+    return campaignIdHandler(patchedReq as any, res as any);
   });
 
   app.get("/api/campaigns/:id", (req, res) => {
-    const id = parseInt(req.params.id);
-    const campaign = storage.getCampaign(id);
-    if (!campaign) return res.status(404).json({ error: "Not found" });
-    res.json(campaign);
-  });
-
-  app.post("/api/campaigns", (req, res) => {
-    const parsed = insertCampaignSchema.safeParse(req.body);
-    if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
-    const campaign = storage.createCampaign(parsed.data);
-    res.status(201).json(campaign);
+    // This route is now handled by app.all above, but kept just in case for now.
+    // Actually, I can remove the old route handlers now that app.all handles it.
   });
 
   app.patch("/api/campaigns/:id", (req, res) => {
-    const id = parseInt(req.params.id);
-    const parsed = insertCampaignSchema.partial().safeParse(req.body);
-    if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
-    const updated = storage.updateCampaign(id, parsed.data);
-    if (!updated) return res.status(404).json({ error: "Not found" });
-    res.json(updated);
+    // Already handled by the app.all("/api/campaigns/:id") route above
   });
 
   app.delete("/api/campaigns/:id", (req, res) => {
-    const id = parseInt(req.params.id);
-    storage.deleteCampaign(id);
-    res.json({ ok: true });
+    // Already handled by the app.all("/api/campaigns/:id") route above
   });
 
   // ─── DAILY ACTUALS ───────────────────────────────────────────────
-  app.get("/api/campaigns/:id/actuals", (req, res) => {
-    const campaignId = parseInt(req.params.id);
-    res.json(storage.getDailyActuals(campaignId));
+  app.all("/api/campaigns/:id/actuals", (req, res) => {
+    const patchedReq = { ...req, query: { ...req.query, id: req.params.id } };
+    return actualsHandler(patchedReq as any, res as any);
   });
 
-  app.post("/api/campaigns/:id/actuals", (req, res) => {
-    const campaignId = parseInt(req.params.id);
-    const body = { ...req.body, campaignId };
-    const parsed = insertDailyActualSchema.safeParse(body);
-    if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
-    const actual = storage.upsertDailyActual(parsed.data);
-    res.json(actual);
-  });
-
-  // Bulk upsert — array of daily rows
-  app.post("/api/campaigns/:id/actuals/bulk", (req, res) => {
-    const campaignId = parseInt(req.params.id);
-    const rows = z.array(insertDailyActualSchema.omit({ campaignId: true })).safeParse(req.body);
-    if (!rows.success) return res.status(400).json({ error: rows.error.flatten() });
-    const results = rows.data.map(row =>
-      storage.upsertDailyActual({ ...row, campaignId })
-    );
-    res.json(results);
+  app.all("/api/campaigns/:id/actuals/bulk", (req, res) => {
+    const patchedReq = { ...req, query: { ...req.query, id: req.params.id } };
+    return bulkActualsHandler(patchedReq as any, res as any);
   });
 
   app.delete("/api/campaigns/:id/actuals/:day", (req, res) => {

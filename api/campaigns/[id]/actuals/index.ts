@@ -12,22 +12,42 @@ function getDB() {
 function toCamel(row: any) {
   if (!row) return null;
   return {
-    id: row.id, campaignId: row.campaign_id, day: row.day,
-    spendIG: row.spend_ig, spendFB: row.spend_fb, spendGS: row.spend_gs, spendGD: row.spend_gd,
-    impIG: row.imp_ig, impFB: row.imp_fb, impGS: row.imp_gs, impGD: row.imp_gd,
-    clicksIG: row.clicks_ig, clicksFB: row.clicks_fb, clicksGS: row.clicks_gs, clicksGD: row.clicks_gd,
+    id: row.id,
+    campaignId: row.campaign_id,
+    day: row.day,
+    date: row.date,
+    spendInstagram: row.spend_instagram,
+    spendFacebook: row.spend_facebook,
+    spendGoogleSearch: row.spend_google_search,
+    spendGoogleDisplay: row.spend_google_display,
+    impInstagram: row.imp_instagram,
+    impFacebook: row.imp_facebook,
+    impGoogleSearch: row.imp_google_search,
+    impGoogleDisplay: row.imp_google_display,
+    clicksInstagram: row.clicks_instagram,
+    clicksFacebook: row.clicks_facebook,
+    clicksGoogleSearch: row.clicks_google_search,
+    clicksGoogleDisplay: row.clicks_google_display,
   };
 }
 
 function toSnake(b: any, campaignId: number) {
   return {
-    campaign_id: campaignId, day: b.day,
-    spend_ig: b.spendIG ?? b.spend_ig ?? 0, spend_fb: b.spendFB ?? b.spend_fb ?? 0,
-    spend_gs: b.spendGS ?? b.spend_gs ?? 0, spend_gd: b.spendGD ?? b.spend_gd ?? 0,
-    imp_ig: b.impIG ?? b.imp_ig ?? 0, imp_fb: b.impFB ?? b.imp_fb ?? 0,
-    imp_gs: b.impGS ?? b.imp_gs ?? 0, imp_gd: b.impGD ?? b.imp_gd ?? 0,
-    clicks_ig: b.clicksIG ?? b.clicks_ig ?? 0, clicks_fb: b.clicksFB ?? b.clicks_fb ?? 0,
-    clicks_gs: b.clicksGS ?? b.clicks_gs ?? 0, clicks_gd: b.clicksGD ?? b.clicks_gd ?? 0,
+    campaign_id: campaignId,
+    day: b.day,
+    date: b.date ?? null,
+    spend_instagram: b.spendInstagram ?? 0,
+    spend_facebook: b.spendFacebook ?? 0,
+    spend_google_search: b.spendGoogleSearch ?? 0,
+    spend_google_display: b.spendGoogleDisplay ?? 0,
+    imp_instagram: b.impInstagram ?? 0,
+    imp_facebook: b.impFacebook ?? 0,
+    imp_google_search: b.impGoogleSearch ?? 0,
+    imp_google_display: b.impGoogleDisplay ?? 0,
+    clicks_instagram: b.clicksInstagram ?? 0,
+    clicks_facebook: b.clicksFacebook ?? 0,
+    clicks_google_search: b.clicksGoogleSearch ?? 0,
+    clicks_google_display: b.clicksGoogleDisplay ?? 0,
   };
 }
 
@@ -44,13 +64,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const db = getDB();
 
     if (req.method === "GET") {
-      const { data, error } = await db.from("daily_actuals").select("*").eq("campaign_id", campaignId).order("day");
+      const { data, error } = await db
+        .from("daily_actuals").select("*").eq("campaign_id", campaignId).order("day");
       if (error) return res.status(500).json({ error: error.message });
       return res.json((data || []).map(toCamel));
     }
 
     if (req.method === "POST") {
-      const { data, error } = await db.from("daily_actuals")
+      const { data, error } = await db
+        .from("daily_actuals")
         .upsert([toSnake(req.body, campaignId)], { onConflict: "campaign_id,day" })
         .select().single();
       if (error) return res.status(500).json({ error: error.message });

@@ -64,8 +64,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     if (req.method === "PATCH") {
-      const { data, error } = await db.from("campaigns").update(toSnake(req.body)).eq("id", id).select().single();
-      if (error) return res.status(500).json({ error: error.message });
+      console.log("PATCH request body:", req.body);
+      const snakeData = toSnake(req.body);
+      console.log("Mapped snakeData:", snakeData);
+      const { data, error } = await db.from("campaigns").update(snakeData).eq("id", id).select().single();
+      if (error) {
+        console.error("Supabase update error:", error);
+        return res.status(500).json({ error: error.message });
+      }
       return res.json(toCamel(data));
     }
 

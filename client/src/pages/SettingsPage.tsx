@@ -80,7 +80,7 @@ export default function SettingsPage() {
     }
   };
 
-  if (isLoading) return <div className="p-6 space-y-3">{[...Array(6)].map((_,i) => <Skeleton key={i} className="h-12 rounded-xl" />)}</div>;
+  if (isLoading) return <div className="p-6 space-y-3">{[...Array(6)].map((_, i) => <Skeleton key={i} className="h-12 rounded-xl" />)}</div>;
 
   return (
     <div className="p-6 max-w-2xl space-y-6">

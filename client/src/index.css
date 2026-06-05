@@ -105,9 +105,20 @@
 }
 
 /* Traffic light status dots */
-.status-green  { background: #22c55e; box-shadow: 0 0 6px rgba(34,197,94,0.5); }
-.status-yellow { background: #eab308; box-shadow: 0 0 6px rgba(234,179,8,0.5); }
-.status-red    { background: #ef4444; box-shadow: 0 0 6px rgba(239,68,68,0.5); }
+.status-green {
+  background: #22c55e;
+  box-shadow: 0 0 6px rgba(34, 197, 94, 0.5);
+}
+
+.status-yellow {
+  background: #eab308;
+  box-shadow: 0 0 6px rgba(234, 179, 8, 0.5);
+}
+
+.status-red {
+  background: #ef4444;
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.5);
+}
 
 /* Chart tooltip override */
 .recharts-tooltip-wrapper .recharts-default-tooltip {
@@ -117,7 +128,9 @@
 }
 
 /* Scrollable main */
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
 }
 
@@ -153,15 +166,18 @@ html, body, #root {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto 1fr;
   }
+
   .dashboard-sidebar {
     grid-row: 2;
     grid-column: 1;
     overflow-y: visible;
   }
+
   .dashboard-header {
     grid-column: 1;
     grid-row: 1;
   }
+
   .dashboard-main {
     grid-column: 1;
     grid-row: 3;
@@ -170,14 +186,34 @@ html, body, #root {
 
 /* Pulse animation for live badge */
 @keyframes pulse-dot {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
 }
-.pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
+
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
 
 /* Number count-up animation */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(4px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-.fade-up { animation: fadeUp 0.4s ease-out both; }
+
+.fade-up {
+  animation: fadeUp 0.4s ease-out both;
+}

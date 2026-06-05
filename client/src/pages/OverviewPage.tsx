@@ -85,15 +85,15 @@ export default function OverviewPage() {
   const dayCount = daysWithData.length;
 
   // Cumulative KPIs
-  const totalSpendReal  = dayData.reduce((s, d) => s + d.totalSpendReal, 0);
-  const totalSpendProj  = campaign.totalBudget;
-  const spendSoFarProj  = (campaign.totalBudget / campaign.durationDays) * dayCount;
-  const totalImpReal    = dayData.reduce((s, d) => s + d.totalImpReal, 0);
-  const totalImpProj    = dayData.reduce((s, d) => s + d.totalImpProj, 0);
+  const totalSpendReal = dayData.reduce((s, d) => s + d.totalSpendReal, 0);
+  const totalSpendProj = campaign.totalBudget;
+  const spendSoFarProj = (campaign.totalBudget / campaign.durationDays) * dayCount;
+  const totalImpReal = dayData.reduce((s, d) => s + d.totalImpReal, 0);
+  const totalImpProj = dayData.reduce((s, d) => s + d.totalImpProj, 0);
   const totalClicksReal = dayData.reduce((s, d) => s + d.totalClicksReal, 0);
   const totalClicksProj = dayData.reduce((s, d) => s + d.totalClicksProj, 0);
-  const ctrReal         = totalImpReal > 0 ? totalClicksReal / totalImpReal : 0;
-  const pacingRatio     = spendSoFarProj > 0 ? totalSpendReal / spendSoFarProj : 0;
+  const ctrReal = totalImpReal > 0 ? totalClicksReal / totalImpReal : 0;
+  const pacingRatio = spendSoFarProj > 0 ? totalSpendReal / spendSoFarProj : 0;
   const budgetRemaining = totalSpendProj - totalSpendReal;
 
   // Trend vs prev day
@@ -139,8 +139,8 @@ export default function OverviewPage() {
           <KpiCard
             label="Impresiones Reales"
             value={fmtNum(totalImpReal)}
-            sub={dayCount > 0 ? `Meta parcial: ${fmtNum(dayData.slice(0, dayCount).reduce((s,d) => s + d.totalImpProj, 0))}` : "Sin datos"}
-            trend={totalImpReal > 0 ? (totalImpReal >= dayData.slice(0,dayCount).reduce((s,d)=>s+d.totalImpProj,0) * 0.9 ? "up" : "down") : "flat"}
+            sub={dayCount > 0 ? `Meta parcial: ${fmtNum(dayData.slice(0, dayCount).reduce((s, d) => s + d.totalImpProj, 0))}` : "Sin datos"}
+            trend={totalImpReal > 0 ? (totalImpReal >= dayData.slice(0, dayCount).reduce((s, d) => s + d.totalImpProj, 0) * 0.9 ? "up" : "down") : "flat"}
             icon={Eye}
             color="#E1306C"
           />
@@ -262,14 +262,14 @@ export default function OverviewPage() {
                 contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "8px", fontSize: 12 }}
                 formatter={(v: any) => [`$${v}k`]}
               />
-              <Bar dataKey="IG" fill="#E1306C" stackId="a" radius={[0,0,0,0]} />
+              <Bar dataKey="IG" fill="#E1306C" stackId="a" radius={[0, 0, 0, 0]} />
               <Bar dataKey="FB" fill="#1877F2" stackId="a" />
               <Bar dataKey="GS" fill="#34A853" stackId="a" />
-              <Bar dataKey="GD" fill="#FBBC05" stackId="a" radius={[3,3,0,0]} />
+              <Bar dataKey="GD" fill="#FBBC05" stackId="a" radius={[3, 3, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
           <div className="flex flex-wrap gap-3 mt-2 justify-center">
-            {[["IG","#E1306C","Instagram"],["FB","#1877F2","Facebook"],["GS","#34A853","Google S."],["GD","#FBBC05","Google D."]].map(([k,c,l]) => (
+            {[["IG", "#E1306C", "Instagram"], ["FB", "#1877F2", "Facebook"], ["GS", "#34A853", "Google S."], ["GD", "#FBBC05", "Google D."]].map(([k, c, l]) => (
               <span key={k} className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <span className="w-3 h-3 rounded-sm inline-block" style={{ backgroundColor: c as string }} />{l}
               </span>
@@ -282,7 +282,7 @@ export default function OverviewPage() {
       <section className="bg-card border border-border rounded-xl p-5">
         <h2 className="text-sm font-semibold text-foreground mb-4">Resumen presupuestal</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {(["instagram","facebook","googleSearch","googleDisplay"] as const).map(ch => {
+          {(["instagram", "facebook", "googleSearch", "googleDisplay"] as const).map(ch => {
             const meta = CHANNEL_META[ch];
             const totalReal = actuals.reduce((s, a) => {
               const key = `spend${ch === "instagram" ? "Instagram" : ch === "facebook" ? "Facebook" : ch === "googleSearch" ? "GoogleSearch" : "GoogleDisplay"}` as keyof typeof a;
@@ -290,9 +290,9 @@ export default function OverviewPage() {
             }, 0);
             const totalBudget = campaign.totalBudget * (
               ch === "instagram" ? campaign.pctInstagram :
-              ch === "facebook" ? campaign.pctFacebook :
-              ch === "googleSearch" ? campaign.pctGoogleSearch :
-              campaign.pctGoogleDisplay
+                ch === "facebook" ? campaign.pctFacebook :
+                  ch === "googleSearch" ? campaign.pctGoogleSearch :
+                    campaign.pctGoogleDisplay
             );
             const pct = totalBudget > 0 ? totalReal / totalBudget : 0;
             return (
@@ -302,7 +302,7 @@ export default function OverviewPage() {
                   <span className="text-xs tabular text-muted-foreground">{fmtPct(pct)}</span>
                 </div>
                 <div className="w-full bg-muted rounded-full h-2">
-                  <div className="h-2 rounded-full transition-all" style={{ width: `${Math.min(pct*100,100)}%`, backgroundColor: meta.color }} />
+                  <div className="h-2 rounded-full transition-all" style={{ width: `${Math.min(pct * 100, 100)}%`, backgroundColor: meta.color }} />
                 </div>
                 <div className="flex justify-between text-xs tabular">
                   <span className="text-foreground font-medium">{fmtCOP(totalReal)}</span>

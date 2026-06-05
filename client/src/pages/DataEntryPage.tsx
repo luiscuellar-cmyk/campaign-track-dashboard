@@ -16,18 +16,18 @@ function DayRow({ day, date, actual, onSave, isSaving }: {
   isSaving: boolean;
 }) {
   const [vals, setVals] = useState({
-    spendInstagram:     actual?.spendInstagram    ?? 0,
-    spendFacebook:      actual?.spendFacebook     ?? 0,
-    spendGoogleSearch:  actual?.spendGoogleSearch ?? 0,
+    spendInstagram: actual?.spendInstagram ?? 0,
+    spendFacebook: actual?.spendFacebook ?? 0,
+    spendGoogleSearch: actual?.spendGoogleSearch ?? 0,
     spendGoogleDisplay: actual?.spendGoogleDisplay ?? 0,
-    impInstagram:       actual?.impInstagram      ?? 0,
-    impFacebook:        actual?.impFacebook       ?? 0,
-    impGoogleSearch:    actual?.impGoogleSearch   ?? 0,
-    impGoogleDisplay:   actual?.impGoogleDisplay  ?? 0,
-    clicksInstagram:    actual?.clicksInstagram   ?? 0,
-    clicksFacebook:     actual?.clicksFacebook    ?? 0,
+    impInstagram: actual?.impInstagram ?? 0,
+    impFacebook: actual?.impFacebook ?? 0,
+    impGoogleSearch: actual?.impGoogleSearch ?? 0,
+    impGoogleDisplay: actual?.impGoogleDisplay ?? 0,
+    clicksInstagram: actual?.clicksInstagram ?? 0,
+    clicksFacebook: actual?.clicksFacebook ?? 0,
     clicksGoogleSearch: actual?.clicksGoogleSearch ?? 0,
-    clicksGoogleDisplay:actual?.clicksGoogleDisplay ?? 0,
+    clicksGoogleDisplay: actual?.clicksGoogleDisplay ?? 0,
   });
 
   const [expanded, setExpanded] = useState(false);
@@ -80,10 +80,10 @@ function DayRow({ day, date, actual, onSave, isSaving }: {
               </thead>
               <tbody className="space-y-1">
                 {[
-                  { label: "Instagram",      color: "#E1306C", spendKey: "spendInstagram",     impKey: "impInstagram",      clkKey: "clicksInstagram" },
-                  { label: "Facebook",       color: "#1877F2", spendKey: "spendFacebook",      impKey: "impFacebook",       clkKey: "clicksFacebook" },
-                  { label: "Google Search",  color: "#34A853", spendKey: "spendGoogleSearch",  impKey: "impGoogleSearch",   clkKey: "clicksGoogleSearch" },
-                  { label: "Google Display", color: "#FBBC05", spendKey: "spendGoogleDisplay", impKey: "impGoogleDisplay",  clkKey: "clicksGoogleDisplay" },
+                  { label: "Instagram", color: "#E1306C", spendKey: "spendInstagram", impKey: "impInstagram", clkKey: "clicksInstagram" },
+                  { label: "Facebook", color: "#1877F2", spendKey: "spendFacebook", impKey: "impFacebook", clkKey: "clicksFacebook" },
+                  { label: "Google Search", color: "#34A853", spendKey: "spendGoogleSearch", impKey: "impGoogleSearch", clkKey: "clicksGoogleSearch" },
+                  { label: "Google Display", color: "#FBBC05", spendKey: "spendGoogleDisplay", impKey: "impGoogleDisplay", clkKey: "clicksGoogleDisplay" },
                 ].map(({ label, color, spendKey, impKey, clkKey }) => (
                   <tr key={label}>
                     <td className="py-1.5 pr-3">
@@ -124,19 +124,19 @@ function parsePastedCSV(text: string): Omit<InsertDailyActual, "campaignId">[] |
       const cols = line.split(/[,;\t]/).map(c => c.trim());
       // Expected: day, date, ig_spend, fb_spend, gs_spend, gd_spend, ig_imp, fb_imp, gs_imp, gd_imp, ig_clk, fb_clk, gs_clk, gd_clk
       return {
-        day:                 parseInt(cols[0]) || 0,
-        date:                cols[1] || undefined,
-        spendInstagram:      parseFloat(cols[2]) || 0,
-        spendFacebook:       parseFloat(cols[3]) || 0,
-        spendGoogleSearch:   parseFloat(cols[4]) || 0,
-        spendGoogleDisplay:  parseFloat(cols[5]) || 0,
-        impInstagram:        parseFloat(cols[6]) || 0,
-        impFacebook:         parseFloat(cols[7]) || 0,
-        impGoogleSearch:     parseFloat(cols[8]) || 0,
-        impGoogleDisplay:    parseFloat(cols[9]) || 0,
-        clicksInstagram:     parseFloat(cols[10]) || 0,
-        clicksFacebook:      parseFloat(cols[11]) || 0,
-        clicksGoogleSearch:  parseFloat(cols[12]) || 0,
+        day: parseInt(cols[0]) || 0,
+        date: cols[1] || undefined,
+        spendInstagram: parseFloat(cols[2]) || 0,
+        spendFacebook: parseFloat(cols[3]) || 0,
+        spendGoogleSearch: parseFloat(cols[4]) || 0,
+        spendGoogleDisplay: parseFloat(cols[5]) || 0,
+        impInstagram: parseFloat(cols[6]) || 0,
+        impFacebook: parseFloat(cols[7]) || 0,
+        impGoogleSearch: parseFloat(cols[8]) || 0,
+        impGoogleDisplay: parseFloat(cols[9]) || 0,
+        clicksInstagram: parseFloat(cols[10]) || 0,
+        clicksFacebook: parseFloat(cols[11]) || 0,
+        clicksGoogleSearch: parseFloat(cols[12]) || 0,
         clicksGoogleDisplay: parseFloat(cols[13]) || 0,
       };
     });
@@ -163,7 +163,7 @@ export default function DataEntryPage() {
     </div>
   );
 
-  if (isLoading) return <div className="p-6 space-y-3">{[...Array(5)].map((_,i) => <Skeleton key={i} className="h-14 rounded-xl" />)}</div>;
+  if (isLoading) return <div className="p-6 space-y-3">{[...Array(5)].map((_, i) => <Skeleton key={i} className="h-14 rounded-xl" />)}</div>;
 
   const daysCount = campaign.durationDays;
   const startDate = new Date(campaign.startDate);
