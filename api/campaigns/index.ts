@@ -46,10 +46,13 @@ function toSnake(b: any) {
 }
 
 import { insertCampaignSchema } from "@shared/schema";
-
-// ... [rest of functions] ...
+import { verifyAuth } from "../auth/auth-helper";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method !== "GET" && req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+
+  if (!verifyAuth(req, res)) return;
+
   try {
     const db = getDB();
 
@@ -67,8 +70,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (error) return res.status(500).json({ error: "Failed to create campaign" });
       return res.status(201).json(toCamel(data));
     }
-
-    return res.status(405).json({ error: "Method not allowed" });
   } catch (err: any) {
     return res.status(500).json({ error: "Internal Server Error" });
   }

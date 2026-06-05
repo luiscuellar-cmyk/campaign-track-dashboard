@@ -46,11 +46,15 @@ function toSnake(b: any) {
 }
 
 import { insertCampaignSchema } from "@shared/schema";
-// ... [rest of functions] ...
+import { verifyAuth } from "../auth/auth-helper";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const id = Number(req.query.id);
   if (isNaN(id)) return res.status(400).json({ error: "Invalid id" });
+
+  if (req.method !== "GET") {
+    if (!verifyAuth(req, res)) return;
+  }
 
   try {
     const db = getDB();

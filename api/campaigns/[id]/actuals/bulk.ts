@@ -53,13 +53,15 @@ function toSnake(b: any, campaignId: number) {
 
 import { insertDailyActualSchema } from "@shared/schema";
 import { z } from "zod";
-// ... [rest of functions] ...
+import { verifyAuth } from "../../../auth/auth-helper";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+  if (!verifyAuth(req, res)) return;
 
   const campaignId = Number(req.query.id);
   if (isNaN(campaignId)) return res.status(400).json({ error: "Invalid campaign id" });
+// ... rest of handler
 
   try {
     const db = getDB();
