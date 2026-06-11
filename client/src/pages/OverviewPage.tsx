@@ -180,7 +180,7 @@ export default function OverviewPage() {
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-7 h-7 rounded-md flex items-center justify-center text-xs font-bold text-white"
                   style={{ backgroundColor: alert.color }}>
-                  {alert.channel === "instagram" ? "IG" : alert.channel === "facebook" ? "FB" : alert.channel === "googleSearch" ? "GS" : "GD"}
+                  {alert.channel === "instagram" ? "Meta" : alert.channel === "facebook" ? "Com" : alert.channel === "googleSearch" ? "YT" : "GD"}
                 </div>
                 <span className="text-sm font-semibold text-foreground">{alert.label}</span>
                 <TrafficDot status={alert.status} />
@@ -270,7 +270,7 @@ export default function OverviewPage() {
             </BarChart>
           </ResponsiveContainer>
           <div className="flex flex-wrap gap-3 mt-2 justify-center">
-            {[["IG", "#E1306C", "Instagram"], ["FB", "#1877F2", "Facebook"], ["GS", "#34A853", "Google S."], ["GD", "#FBBC05", "Google D."]].map(([k, c, l]) => (
+            {[["Meta", "#E1306C", "Meta"], ["Com", "#1877F2", "Comitium"], ["YT", "#34A853", "Youtube"], ["GD", "#FBBC05", "Google D."]].map(([k, c, l]) => (
               <span key={k} className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <span className="w-3 h-3 rounded-sm inline-block" style={{ backgroundColor: c as string }} />{l}
               </span>

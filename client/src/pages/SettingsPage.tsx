@@ -102,9 +102,9 @@ export default function SettingsPage() {
           </span>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <Field label="% Instagram" id="pctInstagram" type="number" min="0" max="1" step="0.01" value={form.pctInstagram} onChange={set("pctInstagram")} hint="Ej: 0.30 = 30%" />
-          <Field label="% Facebook" id="pctFacebook" type="number" min="0" max="1" step="0.01" value={form.pctFacebook} onChange={set("pctFacebook")} />
-          <Field label="% Google Search" id="pctGoogleSearch" type="number" min="0" max="1" step="0.01" value={form.pctGoogleSearch} onChange={set("pctGoogleSearch")} />
+          <Field label="% Meta" id="pctInstagram" type="number" min="0" max="1" step="0.01" value={form.pctInstagram} onChange={set("pctInstagram")} hint="Ej: 0.30 = 30%" />
+          <Field label="% Comitium" id="pctFacebook" type="number" min="0" max="1" step="0.01" value={form.pctFacebook} onChange={set("pctFacebook")} />
+          <Field label="% Youtube" id="pctGoogleSearch" type="number" min="0" max="1" step="0.01" value={form.pctGoogleSearch} onChange={set("pctGoogleSearch")} />
           <Field label="% Google Display" id="pctGoogleDisplay" type="number" min="0" max="1" step="0.01" value={form.pctGoogleDisplay} onChange={set("pctGoogleDisplay")} />
         </div>
       </div>
@@ -113,9 +113,9 @@ export default function SettingsPage() {
         <h2 className="text-sm font-bold text-foreground">CPM proyectado por canal (COP)</h2>
         <p className="text-xs text-muted-foreground">Costo por mil impresiones estimado para calcular proyecciones.</p>
         <div className="grid grid-cols-2 gap-4">
-          <Field label="CPM Instagram" id="cpmInstagram" type="number" min="0" step="100" value={form.cpmInstagram} onChange={set("cpmInstagram")} />
-          <Field label="CPM Facebook" id="cpmFacebook" type="number" min="0" step="100" value={form.cpmFacebook} onChange={set("cpmFacebook")} />
-          <Field label="CPM Google Search" id="cpmGoogleSearch" type="number" min="0" step="100" value={form.cpmGoogleSearch} onChange={set("cpmGoogleSearch")} />
+          <Field label="CPM Meta" id="cpmInstagram" type="number" min="0" step="100" value={form.cpmInstagram} onChange={set("cpmInstagram")} />
+          <Field label="CPM Comitium" id="cpmFacebook" type="number" min="0" step="100" value={form.cpmFacebook} onChange={set("cpmFacebook")} />
+          <Field label="CPM Youtube" id="cpmGoogleSearch" type="number" min="0" step="100" value={form.cpmGoogleSearch} onChange={set("cpmGoogleSearch")} />
           <Field label="CPM Google Display" id="cpmGoogleDisplay" type="number" min="0" step="100" value={form.cpmGoogleDisplay} onChange={set("cpmGoogleDisplay")} />
         </div>
       </div>
@@ -124,9 +124,9 @@ export default function SettingsPage() {
         <h2 className="text-sm font-bold text-foreground">CTR proyectado por canal</h2>
         <p className="text-xs text-muted-foreground">Tasa de clics esperada. Se usa como benchmark en el semáforo de rendimiento.</p>
         <div className="grid grid-cols-2 gap-4">
-          <Field label="CTR Instagram" id="ctrInstagram" type="number" min="0" max="1" step="0.001" value={form.ctrInstagram} onChange={set("ctrInstagram")} hint="Ej: 0.018 = 1.8%" />
-          <Field label="CTR Facebook" id="ctrFacebook" type="number" min="0" max="1" step="0.001" value={form.ctrFacebook} onChange={set("ctrFacebook")} />
-          <Field label="CTR Google Search" id="ctrGoogleSearch" type="number" min="0" max="1" step="0.001" value={form.ctrGoogleSearch} onChange={set("ctrGoogleSearch")} />
+          <Field label="CTR Meta" id="ctrInstagram" type="number" min="0" max="1" step="0.001" value={form.ctrInstagram} onChange={set("ctrInstagram")} hint="Ej: 0.018 = 1.8%" />
+          <Field label="CTR Comitium" id="ctrFacebook" type="number" min="0" max="1" step="0.001" value={form.ctrFacebook} onChange={set("ctrFacebook")} />
+          <Field label="CTR Youtube" id="ctrGoogleSearch" type="number" min="0" max="1" step="0.001" value={form.ctrGoogleSearch} onChange={set("ctrGoogleSearch")} />
           <Field label="CTR Google Display" id="ctrGoogleDisplay" type="number" min="0" max="1" step="0.001" value={form.ctrGoogleDisplay} onChange={set("ctrGoogleDisplay")} />
         </div>
       </div>

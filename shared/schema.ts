@@ -64,9 +64,9 @@ export const CHANNELS = ["instagram", "facebook", "googleSearch", "googleDisplay
 export type Channel = typeof CHANNELS[number];
 
 export const CHANNEL_LABELS: Record<string, string> = {
-  instagram: "Instagram",
-  facebook: "Facebook",
-  googleSearch: "Google Search",
+  instagram: "Meta",
+  facebook: "Comitium",
+  googleSearch: "Youtube",
   googleDisplay: "Google Display",
 };
 

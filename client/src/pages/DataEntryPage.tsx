@@ -80,9 +80,9 @@ function DayRow({ day, date, actual, onSave, isSaving }: {
               </thead>
               <tbody className="space-y-1">
                 {[
-                  { label: "Instagram", color: "#E1306C", spendKey: "spendInstagram", impKey: "impInstagram", clkKey: "clicksInstagram" },
-                  { label: "Facebook", color: "#1877F2", spendKey: "spendFacebook", impKey: "impFacebook", clkKey: "clicksFacebook" },
-                  { label: "Google Search", color: "#34A853", spendKey: "spendGoogleSearch", impKey: "impGoogleSearch", clkKey: "clicksGoogleSearch" },
+                  { label: "Meta", color: "#E1306C", spendKey: "spendInstagram", impKey: "impInstagram", clkKey: "clicksInstagram" },
+                  { label: "Comitium", color: "#1877F2", spendKey: "spendFacebook", impKey: "impFacebook", clkKey: "clicksFacebook" },
+                  { label: "Youtube", color: "#34A853", spendKey: "spendGoogleSearch", impKey: "impGoogleSearch", clkKey: "clicksGoogleSearch" },
                   { label: "Google Display", color: "#FBBC05", spendKey: "spendGoogleDisplay", impKey: "impGoogleDisplay", clkKey: "clicksGoogleDisplay" },
                 ].map(({ label, color, spendKey, impKey, clkKey }) => (
                   <tr key={label}>
@@ -226,7 +226,7 @@ export default function DataEntryPage() {
     toast({ title: "Datos borrados" });
   };
 
-  const CSV_TEMPLATE = `día,fecha,ig_inversión,fb_inversión,gs_inversión,gd_inversión,ig_impresiones,fb_impresiones,gs_impresiones,gd_impresiones,ig_clicks,fb_clicks,gs_clicks,gd_clicks
+  const CSV_TEMPLATE = `día,fecha,meta_inversión,comitium_inversión,youtube_inversión,gd_inversión,meta_impresiones,comitium_impresiones,youtube_impresiones,gd_impresiones,meta_clicks,comitium_clicks,youtube_clicks,gd_clicks
 1,09/06/2026,300000,250000,300000,150000,40000,41666,60000,42857,720,625,2700,342
 2,10/06/2026,300000,250000,300000,150000,40000,41666,60000,42857,720,625,2700,342`;
 
@@ -344,9 +344,9 @@ export default function DataEntryPage() {
                 <thead>
                   <tr className="text-muted-foreground border-b border-border">
                     <th className="text-left pb-2 pr-3 font-medium">Día</th>
-                    <th className="text-right pb-2 px-2 font-medium text-[#E1306C]">IG Inv.</th>
-                    <th className="text-right pb-2 px-2 font-medium text-[#1877F2]">FB Inv.</th>
-                    <th className="text-right pb-2 px-2 font-medium text-[#34A853]">GS Inv.</th>
+                    <th className="text-right pb-2 px-2 font-medium text-[#E1306C]">Meta Inv.</th>
+                    <th className="text-right pb-2 px-2 font-medium text-[#1877F2]">Com Inv.</th>
+                    <th className="text-right pb-2 px-2 font-medium text-[#34A853]">YT Inv.</th>
                     <th className="text-right pb-2 px-2 font-medium text-[#FBBC05]">GD Inv.</th>
                     <th className="text-right pb-2 px-2 font-medium">Total</th>
                     <th className="text-right pb-2 pl-2 font-medium">Imp.</th>

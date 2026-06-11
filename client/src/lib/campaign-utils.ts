@@ -4,9 +4,9 @@ export const CHANNELS = ["instagram", "facebook", "googleSearch", "googleDisplay
 export type ChannelKey = typeof CHANNELS[number];
 
 export const CHANNEL_META: Record<ChannelKey, { label: string; color: string; cssVar: string; icon: string }> = {
-  instagram: { label: "Instagram", color: "#E1306C", cssVar: "--ig-color", icon: "IG" },
-  facebook: { label: "Facebook", color: "#1877F2", cssVar: "--fb-color", icon: "FB" },
-  googleSearch: { label: "Google Search", color: "#34A853", cssVar: "--gs-color", icon: "GS" },
+  instagram: { label: "Meta", color: "#E1306C", cssVar: "--ig-color", icon: "Meta" },
+  facebook: { label: "Comitium", color: "#1877F2", cssVar: "--fb-color", icon: "Com" },
+  googleSearch: { label: "Youtube", color: "#34A853", cssVar: "--gs-color", icon: "YT" },
   googleDisplay: { label: "Google Display", color: "#FBBC05", cssVar: "--gd-color", icon: "GD" },
 };
 
