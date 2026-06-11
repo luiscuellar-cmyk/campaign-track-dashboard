@@ -4,8 +4,8 @@ export const CHANNELS = ["instagram", "facebook", "googleSearch", "googleDisplay
 export type ChannelKey = typeof CHANNELS[number];
 
 export const CHANNEL_META: Record<ChannelKey, { label: string; color: string; cssVar: string; icon: string }> = {
-  instagram: { label: "Meta", color: "#E1306C", cssVar: "--ig-color", icon: "Meta" },
-  facebook: { label: "Comitium", color: "#1877F2", cssVar: "--fb-color", icon: "Com" },
+  instagram: { label: "Meta Suite", color: "#E1306C", cssVar: "--ig-color", icon: "Meta" },
+  facebook: { label: "PILAS.COL", color: "#1877F2", cssVar: "--fb-color", icon: "PILAS" },
   googleSearch: { label: "Youtube", color: "#34A853", cssVar: "--gs-color", icon: "YT" },
   googleDisplay: { label: "Google Display", color: "#FBBC05", cssVar: "--gd-color", icon: "GD" },
 };
@@ -90,6 +90,9 @@ export interface DayData {
   ctrProjTotal: number;
   // CPC
   cpcRealTotal: number;
+  // Reach per channel
+  reachIG: number; reachFB: number; reachGS: number; reachGD: number;
+  totalReachReal: number;
 }
 
 export function buildDayData(campaign: Campaign, actuals: DailyActual[]): DayData[] {
@@ -133,9 +136,15 @@ export function buildDayData(campaign: Campaign, actuals: DailyActual[]): DayDat
     const clicksGS = actual?.clicksGoogleSearch ?? 0;
     const clicksGD = actual?.clicksGoogleDisplay ?? 0;
 
+    const reachIG = actual?.reachInstagram ?? 0;
+    const reachFB = actual?.reachFacebook ?? 0;
+    const reachGS = actual?.reachGoogleSearch ?? 0;
+    const reachGD = actual?.reachGoogleDisplay ?? 0;
+
     const totalSpendReal = spendIG + spendFB + spendGS + spendGD;
     const totalImpReal = impIG + impFB + impGS + impGD;
     const totalClicksReal = clicksIG + clicksFB + clicksGS + clicksGD;
+    const totalReachReal = reachIG + reachFB + reachGS + reachGD;
 
     const ctrRealIG = impIG > 0 ? clicksIG / impIG : 0;
     const ctrRealFB = impFB > 0 ? clicksFB / impFB : 0;
@@ -166,6 +175,7 @@ export function buildDayData(campaign: Campaign, actuals: DailyActual[]): DayDat
       ctrProjIG, ctrProjFB, ctrProjGS, ctrProjGD,
       ctrRealTotal, ctrProjTotal,
       cpcRealTotal,
+      reachIG, reachFB, reachGS, reachGD, totalReachReal,
     });
   }
 

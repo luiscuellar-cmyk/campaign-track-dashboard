@@ -104,10 +104,10 @@ export default function ChartsPage() {
   }));
 
   // 6. Channel share of spend real vs projected
-  const channelShareData = [
-    { name: "Instagram", real: Math.round(actuals.reduce((s, a) => s + a.spendInstagram, 0) / 1000), proj: Math.round(campaign.totalBudget * campaign.pctInstagram / 1000) },
-    { name: "Facebook", real: Math.round(actuals.reduce((s, a) => s + a.spendFacebook, 0) / 1000), proj: Math.round(campaign.totalBudget * campaign.pctFacebook / 1000) },
-    { name: "Google Search", real: Math.round(actuals.reduce((s, a) => s + a.spendGoogleSearch, 0) / 1000), proj: Math.round(campaign.totalBudget * campaign.pctGoogleSearch / 1000) },
+    const channelShareData = [
+    { name: "Meta Suite", real: Math.round(actuals.reduce((s, a) => s + a.spendInstagram, 0) / 1000), proj: Math.round(campaign.totalBudget * campaign.pctInstagram / 1000) },
+    { name: "PILAS.COL", real: Math.round(actuals.reduce((s, a) => s + a.spendFacebook, 0) / 1000), proj: Math.round(campaign.totalBudget * campaign.pctFacebook / 1000) },
+    { name: "Youtube", real: Math.round(actuals.reduce((s, a) => s + a.spendGoogleSearch, 0) / 1000), proj: Math.round(campaign.totalBudget * campaign.pctGoogleSearch / 1000) },
     { name: "Google Display", real: Math.round(actuals.reduce((s, a) => s + a.spendGoogleDisplay, 0) / 1000), proj: Math.round(campaign.totalBudget * campaign.pctGoogleDisplay / 1000) },
   ];
 
@@ -198,14 +198,14 @@ export default function ChartsPage() {
               <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v: any) => [`${v}%`]} />
               {(!activeChannel || activeChannel === "instagram") && (
                 <>
-                  <Line type="monotone" dataKey="IG" stroke="#E1306C" strokeWidth={2} dot={false} connectNulls name="Meta Real" />
-                  <Line type="monotone" dataKey="projIG" stroke="#E1306C" strokeWidth={1} strokeDasharray="3 2" dot={false} name="Meta Meta" />
+                  <Line type="monotone" dataKey="IG" stroke="#E1306C" strokeWidth={2} dot={false} connectNulls name="Meta Suite Real" />
+                  <Line type="monotone" dataKey="projIG" stroke="#E1306C" strokeWidth={1} strokeDasharray="3 2" dot={false} name="Meta Suite Meta" />
                 </>
               )}
               {(!activeChannel || activeChannel === "facebook") && (
                 <>
-                  <Line type="monotone" dataKey="FB" stroke="#1877F2" strokeWidth={2} dot={false} connectNulls name="Comitium Real" />
-                  <Line type="monotone" dataKey="projFB" stroke="#1877F2" strokeWidth={1} strokeDasharray="3 2" dot={false} name="Comitium Meta" />
+                  <Line type="monotone" dataKey="FB" stroke="#1877F2" strokeWidth={2} dot={false} connectNulls name="PILAS.COL Real" />
+                  <Line type="monotone" dataKey="projFB" stroke="#1877F2" strokeWidth={1} strokeDasharray="3 2" dot={false} name="PILAS.COL Meta" />
                 </>
               )}
               {(!activeChannel || activeChannel === "googleSearch") && (
@@ -223,7 +223,7 @@ export default function ChartsPage() {
             </LineChart>
           </ResponsiveContainer>
           <div className="flex flex-wrap gap-3 mt-2 justify-center">
-            {[["Meta", "#E1306C"], ["Com", "#1877F2"], ["YT", "#34A853"], ["GD", "#FBBC05"]].map(([k, c]) => (
+            {[["Meta suite", "#E1306C"], ["PILAS", "#1877F2"], ["YT", "#34A853"], ["GD", "#FBBC05"]].map(([k, c]) => (
               <span key={k} className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <span className="w-4 h-0.5 inline-block" style={{ backgroundColor: c }} />{k}
                 <span className="text-muted-foreground/50">— meta</span>
@@ -286,14 +286,14 @@ export default function ChartsPage() {
               <XAxis dataKey="day" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
               <Tooltip contentStyle={TOOLTIP_STYLE} />
-              {(!activeChannel || activeChannel === "instagram") && <Bar dataKey="IG" fill="#E1306C" stackId="a" name="Meta" />}
-              {(!activeChannel || activeChannel === "facebook") && <Bar dataKey="FB" fill="#1877F2" stackId="a" name="Comitium" />}
+              {(!activeChannel || activeChannel === "instagram") && <Bar dataKey="IG" fill="#E1306C" stackId="a" name="Meta Suite" />}
+              {(!activeChannel || activeChannel === "facebook") && <Bar dataKey="FB" fill="#1877F2" stackId="a" name="PILAS.COL" />}
               {(!activeChannel || activeChannel === "googleSearch") && <Bar dataKey="GS" fill="#34A853" stackId="a" name="Youtube" />}
               {(!activeChannel || activeChannel === "googleDisplay") && <Bar dataKey="GD" fill="#FBBC05" stackId="a" radius={[3, 3, 0, 0]} name="Google D." />}
             </BarChart>
           </ResponsiveContainer>
           <div className="flex flex-wrap gap-3 mt-2 justify-center">
-            {[["Meta", "#E1306C"], ["Comitium", "#1877F2"], ["Youtube", "#34A853"], ["Google D.", "#FBBC05"]].map(([l, c]) => (
+            {[["Meta Suite", "#E1306C"], ["PILAS.COL", "#1877F2"], ["Youtube", "#34A853"], ["Google D.", "#FBBC05"]].map(([l, c]) => (
               <span key={l} className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <span className="w-3 h-3 rounded-sm inline-block" style={{ backgroundColor: c }} />{l}
               </span>

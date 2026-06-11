@@ -28,6 +28,10 @@ function toCamel(row: any) {
     clicksFacebook: row.clicks_facebook,
     clicksGoogleSearch: row.clicks_google_search,
     clicksGoogleDisplay: row.clicks_google_display,
+    reachInstagram: row.reach_instagram,
+    reachFacebook: row.reach_facebook,
+    reachGoogleSearch: row.reach_google_search,
+    reachGoogleDisplay: row.reach_google_display,
   };
 }
 
@@ -48,6 +52,10 @@ function toSnake(b: any, campaignId: number) {
     clicks_facebook: b.clicksFacebook ?? 0,
     clicks_google_search: b.clicksGoogleSearch ?? 0,
     clicks_google_display: b.clicksGoogleDisplay ?? 0,
+    reach_instagram: b.reachInstagram ?? 0,
+    reach_facebook: b.reachFacebook ?? 0,
+    reach_google_search: b.reachGoogleSearch ?? 0,
+    reach_google_display: b.reachGoogleDisplay ?? 0,
   };
 }
 

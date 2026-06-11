@@ -28,6 +28,10 @@ function DayRow({ day, date, actual, onSave, isSaving }: {
     clicksFacebook: actual?.clicksFacebook ?? 0,
     clicksGoogleSearch: actual?.clicksGoogleSearch ?? 0,
     clicksGoogleDisplay: actual?.clicksGoogleDisplay ?? 0,
+    reachInstagram: actual?.reachInstagram ?? 0,
+    reachFacebook: actual?.reachFacebook ?? 0,
+    reachGoogleSearch: actual?.reachGoogleSearch ?? 0,
+    reachGoogleDisplay: actual?.reachGoogleDisplay ?? 0,
   });
 
   const [expanded, setExpanded] = useState(false);
@@ -76,15 +80,16 @@ function DayRow({ day, date, actual, onSave, isSaving }: {
                   <th className="text-right pb-2 font-medium">Inversión (COP)</th>
                   <th className="text-right pb-2 font-medium">Impresiones</th>
                   <th className="text-right pb-2 font-medium">Clicks</th>
+                  <th className="text-right pb-2 font-medium">Alcance</th>
                 </tr>
               </thead>
               <tbody className="space-y-1">
                 {[
-                  { label: "Meta", color: "#E1306C", spendKey: "spendInstagram", impKey: "impInstagram", clkKey: "clicksInstagram" },
-                  { label: "Comitium", color: "#1877F2", spendKey: "spendFacebook", impKey: "impFacebook", clkKey: "clicksFacebook" },
-                  { label: "Youtube", color: "#34A853", spendKey: "spendGoogleSearch", impKey: "impGoogleSearch", clkKey: "clicksGoogleSearch" },
-                  { label: "Google Display", color: "#FBBC05", spendKey: "spendGoogleDisplay", impKey: "impGoogleDisplay", clkKey: "clicksGoogleDisplay" },
-                ].map(({ label, color, spendKey, impKey, clkKey }) => (
+                  { label: "Meta Suite", color: "#E1306C", spendKey: "spendInstagram", impKey: "impInstagram", clkKey: "clicksInstagram", reachKey: "reachInstagram" },
+                  { label: "PILAS.COL", color: "#1877F2", spendKey: "spendFacebook", impKey: "impFacebook", clkKey: "clicksFacebook", reachKey: "reachFacebook" },
+                  { label: "Youtube", color: "#34A853", spendKey: "spendGoogleSearch", impKey: "impGoogleSearch", clkKey: "clicksGoogleSearch", reachKey: "reachGoogleSearch" },
+                  { label: "Google Display", color: "#FBBC05", spendKey: "spendGoogleDisplay", impKey: "impGoogleDisplay", clkKey: "clicksGoogleDisplay", reachKey: "reachGoogleDisplay" },
+                ].map(({ label, color, spendKey, impKey, clkKey, reachKey }) => (
                   <tr key={label}>
                     <td className="py-1.5 pr-3">
                       <span className="font-semibold" style={{ color }}>{label}</span>
@@ -92,6 +97,7 @@ function DayRow({ day, date, actual, onSave, isSaving }: {
                     <td className="py-1.5 px-1">{field(spendKey as keyof typeof vals)}</td>
                     <td className="py-1.5 px-1">{field(impKey as keyof typeof vals)}</td>
                     <td className="py-1.5 px-1">{field(clkKey as keyof typeof vals)}</td>
+                    <td className="py-1.5 px-1">{field(reachKey as keyof typeof vals)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -138,6 +144,10 @@ function parsePastedCSV(text: string): Omit<InsertDailyActual, "campaignId">[] |
         clicksFacebook: parseFloat(cols[11]) || 0,
         clicksGoogleSearch: parseFloat(cols[12]) || 0,
         clicksGoogleDisplay: parseFloat(cols[13]) || 0,
+        reachInstagram: parseFloat(cols[14]) || 0,
+        reachFacebook: parseFloat(cols[15]) || 0,
+        reachGoogleSearch: parseFloat(cols[16]) || 0,
+        reachGoogleDisplay: parseFloat(cols[17]) || 0,
       };
     });
   } catch {
@@ -226,9 +236,9 @@ export default function DataEntryPage() {
     toast({ title: "Datos borrados" });
   };
 
-  const CSV_TEMPLATE = `día,fecha,meta_inversión,comitium_inversión,youtube_inversión,gd_inversión,meta_impresiones,comitium_impresiones,youtube_impresiones,gd_impresiones,meta_clicks,comitium_clicks,youtube_clicks,gd_clicks
-1,09/06/2026,300000,250000,300000,150000,40000,41666,60000,42857,720,625,2700,342
-2,10/06/2026,300000,250000,300000,150000,40000,41666,60000,42857,720,625,2700,342`;
+  const CSV_TEMPLATE = `día,fecha,metasuite_inversión,pilascol_inversión,youtube_inversión,gd_inversión,metasuite_impresiones,pilascol_impresiones,youtube_impresiones,gd_impresiones,metasuite_clicks,pilascol_clicks,youtube_clicks,gd_clicks,metasuite_alcance,pilascol_alcance,youtube_alcance,gd_alcance
+1,09/06/2026,300000,250000,300000,150000,40000,41666,60000,42857,720,625,2700,342,35000,38000,55000,40000
+2,10/06/2026,300000,250000,300000,150000,40000,41666,60000,42857,720,625,2700,342,35000,38000,55000,40000`;
 
   return (
     <div className="p-6 space-y-6">
@@ -277,8 +287,8 @@ export default function DataEntryPage() {
               Cargar o pegar CSV
             </h3>
             <p className="text-xs text-muted-foreground mb-4">
-              14 columnas separadas por coma, punto y coma o tabulación:<br />
-              <code className="bg-muted px-1 py-0.5 rounded text-xs">día, fecha, ig_inversión, fb_inversión, gs_inversión, gd_inversión, ig_imp, fb_imp, gs_imp, gd_imp, ig_clk, fb_clk, gs_clk, gd_clk</code>
+              14 columnas de datos + 4 columnas de alcance separadas por coma, punto y coma o tabulación:<br />
+              <code className="bg-muted px-1 py-0.5 rounded text-xs">día, fecha, ig_inv, fb_inv, gs_inv, gd_inv, ig_imp, fb_imp, gs_imp, gd_imp, ig_clk, fb_clk, gs_clk, gd_clk, ig_alcance, fb_alcance, gs_alcance, gd_alcance</code>
             </p>
 
             {/* Upload button */}
@@ -344,13 +354,14 @@ export default function DataEntryPage() {
                 <thead>
                   <tr className="text-muted-foreground border-b border-border">
                     <th className="text-left pb-2 pr-3 font-medium">Día</th>
-                    <th className="text-right pb-2 px-2 font-medium text-[#E1306C]">Meta Inv.</th>
-                    <th className="text-right pb-2 px-2 font-medium text-[#1877F2]">Com Inv.</th>
+                    <th className="text-right pb-2 px-2 font-medium text-[#E1306C]">Meta S. Inv.</th>
+                    <th className="text-right pb-2 px-2 font-medium text-[#1877F2]">PILAS Inv.</th>
                     <th className="text-right pb-2 px-2 font-medium text-[#34A853]">YT Inv.</th>
                     <th className="text-right pb-2 px-2 font-medium text-[#FBBC05]">GD Inv.</th>
                     <th className="text-right pb-2 px-2 font-medium">Total</th>
                     <th className="text-right pb-2 pl-2 font-medium">Imp.</th>
                     <th className="text-right pb-2 pl-2 font-medium">Clicks</th>
+                    <th className="text-right pb-2 pl-2 font-medium">Alcance</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -369,6 +380,9 @@ export default function DataEntryPage() {
                       </td>
                       <td className="py-1.5 pl-2 text-right tabular text-muted-foreground">
                         {(row.clicksInstagram + row.clicksFacebook + row.clicksGoogleSearch + row.clicksGoogleDisplay).toLocaleString("es-CO")}
+                      </td>
+                      <td className="py-1.5 pl-2 text-right tabular text-muted-foreground font-medium">
+                        {(row.reachInstagram + row.reachFacebook + row.reachGoogleSearch + row.reachGoogleDisplay).toLocaleString("es-CO")}
                       </td>
                     </tr>
                   ))}

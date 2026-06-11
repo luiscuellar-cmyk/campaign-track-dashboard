@@ -2,7 +2,7 @@ import { useCampaignStore, useDailyActuals } from "@/hooks/useCampaignStore";
 import { buildDayData, getChannelAlerts, fmtCOP, fmtNum, fmtPct, CHANNEL_META, type TrafficLight } from "@/lib/campaign-utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { AlertTriangle, TrendingUp, TrendingDown, Minus, DollarSign, Eye, MousePointerClick, Target } from "lucide-react";
+import { AlertTriangle, TrendingUp, TrendingDown, Minus, DollarSign, Eye, MousePointerClick, Target, Users } from "lucide-react";
 import { Link } from "wouter";
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend
@@ -81,7 +81,10 @@ export default function OverviewPage() {
 
   const dayData = buildDayData(campaign, actuals);
   const alerts = getChannelAlerts(campaign, actuals);
-  const daysWithData = dayData.filter(d => d.totalSpendReal > 0);
+  // Consider any day that has any real data (spend, imp, clicks or reach)
+  const daysWithData = dayData.filter(d => 
+    d.totalSpendReal > 0 || d.totalImpReal > 0 || d.totalClicksReal > 0 || d.totalReachReal > 0
+  );
   const lastDay = daysWithData[daysWithData.length - 1];
   const dayCount = daysWithData.length;
 
@@ -94,6 +97,10 @@ export default function OverviewPage() {
   const totalClicksReal = dayData.reduce((s, d) => s + d.totalClicksReal, 0);
   const totalClicksProj = dayData.reduce((s, d) => s + d.totalClicksProj, 0);
   const ctrReal = totalImpReal > 0 ? totalClicksReal / totalImpReal : 0;
+  const totalReachReal = dayData.reduce((s, d) => s + d.totalReachReal, 0);
+  const reachGoal = campaign.reachGoal || 1;
+  const reachPacing = totalReachReal / reachGoal;
+  const cprReal = totalReachReal > 0 ? totalSpendReal / totalReachReal : 0;
   const pacingRatio = spendSoFarProj > 0 ? totalSpendReal / spendSoFarProj : 0;
   const budgetRemaining = totalSpendProj - totalSpendReal;
 
@@ -128,7 +135,7 @@ export default function OverviewPage() {
     <div className="p-6 space-y-6">
       {/* KPI Cards */}
       <section>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
           <KpiCard
             label="Inversión Acumulada"
             value={fmtCOP(totalSpendReal)}
@@ -161,6 +168,14 @@ export default function OverviewPage() {
             icon={Target}
             color="#FBBC05"
           />
+          <KpiCard
+            label="Alcance Total"
+            value={fmtNum(totalReachReal)}
+            sub={`${fmtPct(reachPacing)} del objetivo (${fmtNum(reachGoal)})`}
+            trend={reachPacing >= 0.9 ? "up" : "flat"}
+            icon={Users}
+            color="#8B5CF6"
+          />
         </div>
       </section>
 
@@ -180,7 +195,7 @@ export default function OverviewPage() {
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-7 h-7 rounded-md flex items-center justify-center text-xs font-bold text-white"
                   style={{ backgroundColor: alert.color }}>
-                  {alert.channel === "instagram" ? "Meta" : alert.channel === "facebook" ? "Com" : alert.channel === "googleSearch" ? "YT" : "GD"}
+                  {alert.channel === "instagram" ? "Meta" : alert.channel === "facebook" ? "PILAS" : alert.channel === "googleSearch" ? "YT" : "GD"}
                 </div>
                 <span className="text-sm font-semibold text-foreground">{alert.label}</span>
                 <TrafficDot status={alert.status} />
@@ -270,7 +285,7 @@ export default function OverviewPage() {
             </BarChart>
           </ResponsiveContainer>
           <div className="flex flex-wrap gap-3 mt-2 justify-center">
-            {[["Meta", "#E1306C", "Meta"], ["Com", "#1877F2", "Comitium"], ["YT", "#34A853", "Youtube"], ["GD", "#FBBC05", "Google D."]].map(([k, c, l]) => (
+            {[["Meta", "#E1306C", "Meta Suite"], ["PILAS", "#1877F2", "PILAS.COL"], ["YT", "#34A853", "Youtube"], ["GD", "#FBBC05", "Google D."]].map(([k, c, l]) => (
               <span key={k} className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <span className="w-3 h-3 rounded-sm inline-block" style={{ backgroundColor: c as string }} />{l}
               </span>

@@ -17,6 +17,7 @@ export const insertCampaignSchema = z.object({
   pctFacebook: z.number().default(0.25),
   pctGoogleSearch: z.number().default(0.30),
   pctGoogleDisplay: z.number().default(0.15),
+  reachGoal: z.number().default(1000000),
 });
 
 export const insertDailyActualSchema = z.object({
@@ -35,6 +36,10 @@ export const insertDailyActualSchema = z.object({
   clicksFacebook: z.number().default(0),
   clicksGoogleSearch: z.number().default(0),
   clicksGoogleDisplay: z.number().default(0),
+  reachInstagram: z.number().default(0),
+  reachFacebook: z.number().default(0),
+  reachGoogleSearch: z.number().default(0),
+  reachGoogleDisplay: z.number().default(0),
 });
 
 export type InsertCampaign = z.infer<typeof insertCampaignSchema>;

@@ -47,7 +47,11 @@ sqlite.exec(`
     clicks_instagram REAL NOT NULL DEFAULT 0,
     clicks_facebook REAL NOT NULL DEFAULT 0,
     clicks_google_search REAL NOT NULL DEFAULT 0,
-    clicks_google_display REAL NOT NULL DEFAULT 0
+    clicks_google_display REAL NOT NULL DEFAULT 0,
+    reach_instagram REAL NOT NULL DEFAULT 0,
+    reach_facebook REAL NOT NULL DEFAULT 0,
+    reach_google_search REAL NOT NULL DEFAULT 0,
+    reach_google_display REAL NOT NULL DEFAULT 0
   );
 `);
 

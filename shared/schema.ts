@@ -24,6 +24,8 @@ export const campaigns = sqliteTable("campaigns", {
   pctFacebook: real("pct_facebook").notNull().default(0.25),
   pctGoogleSearch: real("pct_google_search").notNull().default(0.30),
   pctGoogleDisplay: real("pct_google_display").notNull().default(0.15),
+  // Reach goal for the whole campaign
+  reachGoal: integer("reach_goal").notNull().default(1000000),
 });
 
 // Daily actuals — one row per day per campaign
@@ -47,6 +49,11 @@ export const dailyActuals = sqliteTable("daily_actuals", {
   clicksFacebook: real("clicks_facebook").notNull().default(0),
   clicksGoogleSearch: real("clicks_google_search").notNull().default(0),
   clicksGoogleDisplay: real("clicks_google_display").notNull().default(0),
+  // Real reach per channel
+  reachInstagram: real("reach_instagram").notNull().default(0),
+  reachFacebook: real("reach_facebook").notNull().default(0),
+  reachGoogleSearch: real("reach_google_search").notNull().default(0),
+  reachGoogleDisplay: real("reach_google_display").notNull().default(0),
 });
 
 // Insert schemas
@@ -64,8 +71,8 @@ export const CHANNELS = ["instagram", "facebook", "googleSearch", "googleDisplay
 export type Channel = typeof CHANNELS[number];
 
 export const CHANNEL_LABELS: Record<string, string> = {
-  instagram: "Meta",
-  facebook: "Comitium",
+  instagram: "Meta Suite",
+  facebook: "PILAS.COL",
   googleSearch: "Youtube",
   googleDisplay: "Google Display",
 };
