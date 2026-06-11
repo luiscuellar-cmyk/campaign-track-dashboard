@@ -82,7 +82,7 @@ export default function OverviewPage() {
   const dayData = buildDayData(campaign, actuals);
   const alerts = getChannelAlerts(campaign, actuals);
   // Consider any day that has any real data (spend, imp, clicks or reach)
-  const daysWithData = dayData.filter(d => 
+  const daysWithData = dayData.filter(d =>
     d.totalSpendReal > 0 || d.totalImpReal > 0 || d.totalClicksReal > 0 || d.totalReachReal > 0
   );
   const lastDay = daysWithData[daysWithData.length - 1];
@@ -220,7 +220,7 @@ export default function OverviewPage() {
                   </div>
                   {alert.ctrRatio > 0 && (
                     <div className="flex justify-between text-xs mt-1">
-                      <span className="text-muted-foreground">CTR vs meta</span>
+                      <span className="text-muted-foreground">CTR vs Objetivo</span>
                       <span className={`tabular font-medium ${alert.ctrRatio < 0.65 ? "text-red-500" : alert.ctrRatio < 0.85 ? "text-yellow-500" : "text-green-500"}`}>
                         {fmtPct(alert.ctrRatio)}
                       </span>

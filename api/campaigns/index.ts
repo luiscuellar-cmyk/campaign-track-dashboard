@@ -20,6 +20,7 @@ function toCamel(row: any) {
     cpmGoogleSearch: row.cpm_google_search, cpmGoogleDisplay: row.cpm_google_display,
     ctrInstagram: row.ctr_instagram, ctrFacebook: row.ctr_facebook,
     ctrGoogleSearch: row.ctr_google_search, ctrGoogleDisplay: row.ctr_google_display,
+    reachGoal: row.reach_goal,
     createdAt: row.created_at,
   };
 }
@@ -42,6 +43,7 @@ function toSnake(b: any) {
     ctr_facebook: b.ctrFacebook ?? b.ctr_facebook,
     ctr_google_search: b.ctrGoogleSearch ?? b.ctr_google_search,
     ctr_google_display: b.ctrGoogleDisplay ?? b.ctr_google_display,
+    reach_goal: b.reachGoal ?? b.reach_goal,
   };
 }
 
