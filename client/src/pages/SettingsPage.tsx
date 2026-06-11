@@ -18,7 +18,7 @@ function Field({ label, id, value, onChange, type = "text", step, min, max, hint
         step={step}
         min={min}
         max={max}
-        value={value}
+        value={value ?? (type === "number" ? 0 : "")}
         onChange={e => onChange(type === "number" ? parseFloat(e.target.value) || 0 : e.target.value)}
         className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
       />
@@ -44,6 +44,7 @@ const DEFAULT_FORM: InsertCampaign = {
   ctrFacebook: 0.015,
   ctrGoogleSearch: 0.045,
   ctrGoogleDisplay: 0.008,
+  reachGoal: 1000000,
 };
 
 export default function SettingsPage() {
